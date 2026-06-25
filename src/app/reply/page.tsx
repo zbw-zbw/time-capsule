@@ -74,12 +74,15 @@ function ReplyContent() {
   }, [letterId, router]);
 
   // Envelope opening animation sequence
+  // Phase 0→1 (500ms): envelope slides up from below
+  // Phase 1→2 (2200ms): seal fades, flap opens, paper rises
+  // Phase 2→3 (3800ms): envelope fades out, reply content appears
   useEffect(() => {
     if (!letter) return;
     const timers: ReturnType<typeof setTimeout>[] = [
       setTimeout(() => setAnimPhase(1), 500),
-      setTimeout(() => setAnimPhase(2), 1800),
-      setTimeout(() => setAnimPhase(3), 2800),
+      setTimeout(() => setAnimPhase(2), 2200),
+      setTimeout(() => setAnimPhase(3), 3800),
     ];
     return () => timers.forEach(clearTimeout);
   }, [letter]);
@@ -283,49 +286,66 @@ function ReplyContent() {
         {/* Phase 0-2: Envelope Animation */}
         {animPhase < 3 && (
           <div className="flex justify-center mb-12">
-            <div className="relative" style={{ width: "280px", height: "200px" }}>
+            <div
+              className="relative"
+              style={{
+                width: "280px",
+                height: "200px",
+                /* Phase 0→1: envelope slides up from below with fade-in */
+                opacity: animPhase >= 1 ? 1 : 0,
+                transform: animPhase >= 1 ? "translateY(0)" : "translateY(40px)",
+                transition: "opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1)",
+              }}
+            >
               {/* Envelope body */}
               <div
-                className="absolute inset-0 rounded-lg transition-all duration-700"
+                className="absolute inset-0 rounded-lg"
                 style={{
                   background: "#faf3e8",
                   boxShadow: "0 8px 32px rgba(0,0,0,0.4), 0 2px 8px rgba(0,0,0,0.3)",
                   transform: animPhase >= 2 ? "scaleY(0.8) translateY(-20px)" : "scaleY(1)",
-                  opacity: animPhase >= 2 ? 0.3 : 1,
-                  transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+                  opacity: animPhase >= 2 ? 0 : 1,
+                  transition: "transform 0.8s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s cubic-bezier(0.22, 1, 0.36, 1)",
+                  transitionDelay: animPhase >= 2 ? "0.6s" : "0s",
                 }}
               />
               {/* Bottom flap */}
               <svg
-                className="absolute bottom-0 left-0 w-full transition-opacity duration-500"
+                className="absolute bottom-0 left-0 w-full"
                 viewBox="0 0 280 95"
-                style={{ height: "95px", opacity: animPhase >= 2 ? 0 : 1 }}
+                style={{
+                  height: "95px",
+                  opacity: animPhase >= 2 ? 0 : 1,
+                  transition: "opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
+                  transitionDelay: animPhase >= 2 ? "0.4s" : "0s",
+                }}
               >
                 <path d="M0 0 L280 0 L140 95 Z" fill="#f0e8db" stroke="rgba(180,160,130,0.3)" strokeWidth="1" />
               </svg>
-              {/* Top flap - opens */}
+              {/* Top flap - opens with 1.2s duration, delayed after seal breaks */}
               <svg
                 className="absolute top-0 left-0 w-full"
                 viewBox="0 0 280 95"
                 style={{
                   height: "95px",
-                  transform: animPhase >= 1 ? "rotateX(180deg)" : "rotateX(0deg)",
+                  transform: animPhase >= 2 ? "rotateX(180deg)" : "rotateX(0deg)",
                   transformOrigin: "top center",
-                  transition: "transform 1s cubic-bezier(0.22, 1, 0.36, 1)",
                   opacity: animPhase >= 2 ? 0 : 1,
+                  transition: "transform 1.2s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+                  transitionDelay: animPhase >= 2 ? "0.3s, 0.8s" : "0s, 0s",
                 }}
               >
                 <path d="M0 95 L280 95 L140 0 Z" fill="#e8ddd0" stroke="rgba(180,160,130,0.3)" strokeWidth="1" />
               </svg>
-              {/* Wax seal */}
+              {/* Wax seal - shrinks and fades out before flap opens */}
               <div
-                className="absolute top-[55px] left-1/2 -translate-x-1/2 transition-all duration-700"
+                className="absolute top-[55px] left-1/2"
                 style={{
                   transform: animPhase >= 1
-                    ? "translateX(-50%) scale(1.3)"
-                    : "translateX(-50%) scale(1)",
+                    ? "translateX(-50%) scale(0) rotate(15deg)"
+                    : "translateX(-50%) scale(1) rotate(0deg)",
                   opacity: animPhase >= 1 ? 0 : 1,
-                  transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+                  transition: "transform 0.6s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.5s cubic-bezier(0.22, 1, 0.36, 1)",
                 }}
               >
                 <div
@@ -339,17 +359,18 @@ function ReplyContent() {
                 </div>
               </div>
 
-              {/* Paper sliding out */}
+              {/* Paper sliding out - rises from inside envelope with bounce */}
               {animPhase >= 2 && (
                 <div
-                  className="absolute left-4 right-4 rounded-lg transition-all duration-1000"
+                  className="absolute left-4 right-4 rounded-lg"
                   style={{
                     background: "#f0e8db",
                     height: "120px",
                     top: "-80px",
                     opacity: 1,
                     boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-                    transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
+                    animation: "paper-rise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards",
+                    animationDelay: "0.8s",
                   }}
                 />
               )}
@@ -556,11 +577,27 @@ function ReplyContent() {
         )}
       </div>
 
-      {/* Blink cursor keyframes */}
+      {/* Animation keyframes */}
       <style>{`
         @keyframes blink-cursor {
           0%, 100% { opacity: 1; }
           50% { opacity: 0; }
+        }
+        @keyframes paper-rise {
+          0% {
+            transform: translateY(60px);
+            opacity: 0;
+          }
+          40% {
+            opacity: 1;
+          }
+          70% {
+            transform: translateY(-8px);
+          }
+          100% {
+            transform: translateY(0);
+            opacity: 1;
+          }
         }
       `}</style>
     </div>

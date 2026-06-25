@@ -139,7 +139,23 @@ function CapsuleDetail() {
   useEffect(() => {
     setMounted(true);
     const found = getLetterById(letterId);
-    setLetter(found || null);
+    if (found) {
+      // Check reply progress cache for AI reply data that hasn't been saved to letter yet
+      if (!found.aiReply) {
+        try {
+          const progressKey = `tc-reply-progress-${letterId}`;
+          const cached = localStorage.getItem(progressKey);
+          if (cached && cached.trim().length > 0) {
+            found.aiReply = cached;
+          }
+        } catch {
+          // ignore errors
+        }
+      }
+      setLetter(found);
+    } else {
+      setLetter(null);
+    }
   }, [letterId]);
 
   const handleDelete = useCallback(() => {
@@ -191,7 +207,7 @@ function CapsuleDetail() {
   const openDate = new Date(letter.openAt);
   const createDate = new Date(letter.createdAt);
   const showCountdown = letter.status !== "opened";
-  const showReply = letter.status === "replied" && letter.aiReply;
+  const showReply = !!letter.aiReply;
 
   return (
     <div className="min-h-screen pt-24 pb-20 px-4 md:px-6">

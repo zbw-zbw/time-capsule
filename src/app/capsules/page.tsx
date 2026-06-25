@@ -317,6 +317,14 @@ export default function CapsulesPage() {
 
         {/* Timeline */}
         <div className="relative">
+          {/* Vertical line */}
+          <div
+            className="absolute top-0 bottom-0 w-px left-[14px] md:left-1/2 md:-translate-x-px"
+            style={{
+              background:
+                "linear-gradient(to bottom, rgba(212,165,116,0.2), transparent)",
+            }}
+          />
           {/* Items */}
           <div className="space-y-8 md:space-y-10">
             {filteredLetters.map((letter, i) => (
