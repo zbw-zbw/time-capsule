@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, Suspense } from "react";
 import { useParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   getLetterById,
   deleteLetter,
@@ -10,6 +12,16 @@ import {
   getSalutation,
   type TimeCapsuleLetter,
 } from "@/lib/storage";
+import {
+  IconClock,
+  IconTrash,
+  IconPen,
+  IconMailbox,
+  IconEnvelope,
+  IconCheck,
+  IconRobot,
+  IconInbox,
+} from "@/components/Icons";
 
 function Countdown({ targetDate }: { targetDate: string }) {
   const [now, setNow] = useState(Date.now());
@@ -36,8 +48,9 @@ function Countdown({ targetDate }: { targetDate: string }) {
 
   return (
     <div className="text-center mb-10">
-      <p className="font-sans text-warm-muted text-sm mb-4">
-        ⏳ 距离开启还有
+      <p className="font-sans text-warm-muted text-sm mb-4 inline-flex items-center gap-1 justify-center">
+        <IconClock size={14} />
+        距离开启还有
       </p>
       <div className="flex items-center justify-center gap-2 md:gap-3">
         {blocks.map((block, i) => (
@@ -82,7 +95,9 @@ function DeleteModal({
         className="rounded-2xl p-6 md:p-8 max-w-sm w-full text-center"
         style={{ backgroundColor: "#231e19", border: "1px solid rgba(212,165,116,0.2)" }}
       >
-        <div className="text-4xl mb-4">🗑️</div>
+        <div className="mb-4 inline-block">
+          <IconTrash size={40} color="#d4a574" />
+        </div>
         <h3 className="font-serif font-bold text-warm-white text-lg mb-2">
           确定删除这封时间胶囊吗？
         </h3>
@@ -137,10 +152,10 @@ function CapsuleDetail() {
       <div className="min-h-screen flex items-center justify-center pt-20">
         <div className="text-center">
           <div
-            className="text-3xl mb-3"
+            className="mb-3 inline-block"
             style={{ animation: "loading-pulse 1.5s ease-in-out infinite" }}
           >
-            ⏳
+            <IconClock size={32} />
           </div>
           <p className="text-warm-muted font-sans text-sm">加载中...</p>
         </div>
@@ -152,7 +167,9 @@ function CapsuleDetail() {
     return (
       <div className="min-h-screen flex flex-col items-center justify-center px-6 pt-20">
         <div className="text-center">
-          <div className="text-5xl mb-6">📭</div>
+          <div className="mb-6 inline-block">
+            <IconInbox size={48} />
+          </div>
           <h1 className="font-serif font-bold text-amber text-2xl mb-4">
             找不到这封信
           </h1>
@@ -163,7 +180,7 @@ function CapsuleDetail() {
             href="/capsules"
             className="inline-flex items-center gap-2 px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all btn-lift"
           >
-            ← 回到我的胶囊
+            回到我的胶囊
           </Link>
         </div>
       </div>
@@ -188,7 +205,7 @@ function CapsuleDetail() {
             ← 回到我的胶囊
           </Link>
           <span
-            className="inline-block px-3 py-1 rounded-full text-xs font-sans"
+            className="inline-flex items-center gap-1 px-3 py-1 rounded-full text-xs font-sans"
             style={{
               backgroundColor:
                 letter.status === "opened"
@@ -198,11 +215,22 @@ function CapsuleDetail() {
                 letter.status === "opened" ? "#a89888" : "#d4a574",
             }}
           >
-            {letter.status === "opened"
-              ? "✅ 已开启"
-              : letter.status === "replied"
-              ? "💌 已回信"
-              : "⏳ 等待中"}
+            {letter.status === "opened" ? (
+              <>
+                <IconCheck size={12} />
+                已开启
+              </>
+            ) : letter.status === "replied" ? (
+              <>
+                <IconEnvelope size={12} />
+                已回信
+              </>
+            ) : (
+              <>
+                <IconClock size={12} />
+                等待中
+              </>
+            )}
           </span>
         </div>
 
@@ -221,8 +249,9 @@ function CapsuleDetail() {
             aria-label="原信内容"
           >
             <div className="flex items-start justify-between mb-6">
-              <span className="font-sans text-sm text-[#6a5a4a]">
-                📮 {formatDateCN(createDate)} 的我 · {letter.mood}
+              <span className="font-sans text-sm text-[#6a5a4a] inline-flex items-center gap-1">
+                <IconMailbox size={14} />
+                {formatDateCN(createDate)} 的我 · {letter.mood}
               </span>
               <span
                 className="inline-block px-3 py-1 rounded-full border-2 border-dashed border-[#c4a882]/50 text-[#8a7a6a] text-xs font-sans"
@@ -231,8 +260,10 @@ function CapsuleDetail() {
                 {formatDateCN(createDate)} 寄
               </span>
             </div>
-            <div className="font-handwrite text-[#2a2420] text-base md:text-lg leading-[32px] whitespace-pre-wrap">
-              {letter.content}
+            <div className="markdown-body font-handwrite text-[#2a2420] text-base md:text-lg leading-[32px]">
+              <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                {letter.content || ""}
+              </ReactMarkdown>
             </div>
             {letter.wishes.length > 0 && (
               <div className="mt-4">
@@ -249,31 +280,6 @@ function CapsuleDetail() {
           </div>
         </div>
 
-        {/* Timeline connector */}
-        {showReply && (
-          <div className="flex flex-col items-center py-4">
-            <div className="w-px h-8 bg-rule" />
-            <div
-              className="w-8 h-8 rounded-full flex items-center justify-center"
-              style={{
-                backgroundColor: "rgba(212,165,116,0.2)",
-                border: "1px solid rgba(212,165,116,0.4)",
-              }}
-            >
-              <span className="text-amber text-xs">💌</span>
-            </div>
-            <div className="w-px h-8 bg-rule" />
-            <div className="text-center mt-1">
-              <p className="font-sans text-warm-muted text-xs">
-                跨越 {letter.recipientTime}
-              </p>
-              <p className="font-sans text-warm-muted/50 text-[10px] mt-0.5">
-                {formatDateCN(createDate)} → {formatDateCN(openDate)}
-              </p>
-            </div>
-          </div>
-        )}
-
         {/* AI Reply */}
         {showReply && (
           <div className="mb-8">
@@ -287,16 +293,17 @@ function CapsuleDetail() {
               aria-label="AI 回信内容"
             >
               <div className="flex items-start justify-between mb-6">
-                <span className="font-sans text-sm text-[#6a5a4a]">
-                  💌 {salutation}的你
+                <span className="font-sans text-sm text-[#6a5a4a] inline-flex items-center gap-1">
+                  <IconEnvelope size={14} />
+                  {salutation}的你
                 </span>
                 <div className="flex items-center gap-2">
                   <span
                     className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber/15 text-amber text-[11px] font-sans font-medium"
                     style={{ letterSpacing: "0.02em" }}
                   >
-                    <span className="text-[10px]">🤖</span>
-                    <span>AI 生成</span>
+                    <IconRobot size={12} />
+                    AI 生成
                   </span>
                   <span
                     className="inline-block px-3 py-1 rounded-full border-2 border-dashed border-amber/50 text-amber text-xs font-sans"
@@ -306,8 +313,10 @@ function CapsuleDetail() {
                   </span>
                 </div>
               </div>
-              <div className="font-handwrite text-[#2a2420] text-base md:text-lg leading-[32px] whitespace-pre-wrap">
-                {letter.aiReply}
+              <div className="markdown-body font-handwrite text-[#2a2420] text-base md:text-lg leading-[32px]">
+                <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                  {letter.aiReply || ""}
+                </ReactMarkdown>
               </div>
             </div>
           </div>
@@ -317,18 +326,20 @@ function CapsuleDetail() {
         <div className="flex flex-col sm:flex-row items-center gap-3 justify-center mt-8">
           <Link
             href="/write"
-            className="w-full sm:w-auto px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1 px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift"
           >
-            再写一封 ✍️
+            <IconPen size={14} />
+            再写一封
           </Link>
           <button
             type="button"
             onClick={() => setShowDelete(true)}
-            className="w-full sm:w-auto px-6 py-2.5 border border-warm-muted/30 text-warm-muted font-sans text-sm rounded-full hover:border-seal-red hover:text-seal-red transition-all text-center btn-lift"
+            className="w-full sm:w-auto inline-flex items-center justify-center gap-1 px-6 py-2.5 border border-warm-muted/30 text-warm-muted font-sans text-sm rounded-full hover:border-seal-red hover:text-seal-red transition-all text-center btn-lift"
             style={{ background: "transparent", cursor: "pointer" }}
             aria-label="删除这封胶囊"
           >
-            删除这封胶囊 🗑️
+            <IconTrash size={14} />
+            删除这封胶囊
           </button>
         </div>
       </div>
@@ -351,10 +362,10 @@ export default function CapsuleDetailPage() {
         <div className="min-h-screen flex items-center justify-center pt-20">
           <div className="text-center">
             <div
-              className="text-3xl mb-3"
+              className="mb-3 inline-block"
               style={{ animation: "loading-pulse 1.5s ease-in-out infinite" }}
             >
-              ⏳
+              <IconClock size={32} />
             </div>
             <p className="text-warm-muted font-sans text-sm">加载中...</p>
           </div>

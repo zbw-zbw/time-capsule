@@ -3,6 +3,8 @@
 import { useState, useEffect, useCallback, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Link from "next/link";
+import ReactMarkdown from "react-markdown";
+import remarkGfm from "remark-gfm";
 import {
   type TimeCapsuleLetter,
   getLetterById,
@@ -10,6 +12,18 @@ import {
   formatDateCN,
   updateLetterReply,
 } from "@/lib/storage";
+import {
+  IconEnvelope,
+  IconRobot,
+  IconScroll,
+  IconPostbox,
+  IconCheck,
+  IconSave,
+  IconPen,
+  IconHome,
+  IconFastForward,
+  IconClock,
+} from "@/components/Icons";
 
 const REPLY_PROGRESS_KEY = (id: string) => `tc-reply-progress-${id}`;
 
@@ -225,11 +239,8 @@ function ReplyContent() {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">
         <div className="text-center">
-          <div
-            className="text-3xl mb-3"
-            style={{ animation: "loading-pulse 1.5s ease-in-out infinite" }}
-          >
-            ⏳
+          <div className="mb-3 flex justify-center">
+            <IconClock size={32} color="#a89888" className="animate-spin-slow" />
           </div>
           <p className="text-warm-muted font-sans text-sm">加载中...</p>
         </div>
@@ -250,15 +261,19 @@ function ReplyContent() {
           className="fixed top-20 right-4 z-30 px-3 py-1.5 rounded-full text-[11px] font-sans text-warm-muted/70 border border-warm-muted/20 hover:border-amber/40 hover:text-amber transition-all"
           style={{ background: "rgba(26,21,18,0.8)", backdropFilter: "blur(8px)" }}
         >
-          跳过动画 ⏩
+          <span className="inline-flex items-center gap-1">
+            跳过动画
+            <IconFastForward size={12} />
+          </span>
         </button>
       )}
 
       <div className="max-w-[720px] mx-auto">
         {/* Title */}
         <div className="text-center mb-8">
-          <h1 className="font-handwrite text-amber text-2xl md:text-3xl mb-2">
-            💌 未来的你正在写回信...
+          <h1 className="font-handwrite text-amber text-2xl md:text-3xl mb-2 inline-flex items-center justify-center gap-2">
+            <IconEnvelope size={24} />
+            未来的你正在写回信...
           </h1>
           <p className="font-sans text-warm-muted text-xs">
             请稍等，穿越时空的信正在路上
@@ -356,15 +371,16 @@ function ReplyContent() {
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-6 flex-wrap gap-3">
-                <span className="font-sans text-sm text-[#6a5a4a]">
-                  💌 {salutation}的你
+                <span className="font-sans text-sm text-[#6a5a4a] inline-flex items-center gap-1">
+                  <IconEnvelope size={14} />
+                  {salutation}的你
                 </span>
                 <div className="flex items-center gap-2">
                   <span
                     className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber/15 text-amber text-[11px] font-sans font-medium"
                     style={{ letterSpacing: "0.02em" }}
                   >
-                    <span className="text-[10px]">🤖</span>
+                    <IconRobot size={12} />
                     <span>AI 生成</span>
                   </span>
                   <span
@@ -382,13 +398,23 @@ function ReplyContent() {
                 role="article"
                 aria-label="AI 回信内容"
               >
-                {replyText}
-                {/* Blinking cursor */}
-                {isGenerating && !isDone && (
-                  <span
-                    className="inline-block w-0.5 h-5 bg-amber ml-0.5 align-middle"
-                    style={{ animation: "blink-cursor 1s step-end infinite" }}
-                  />
+                {isDone || letter.aiReply ? (
+                  <div className="markdown-body">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                      {replyText || letter.aiReply || ""}
+                    </ReactMarkdown>
+                  </div>
+                ) : (
+                  <div className="whitespace-pre-wrap">
+                    {replyText}
+                    {/* Blinking cursor */}
+                    {isGenerating && !isDone && (
+                      <span
+                        className="inline-block w-0.5 h-5 bg-amber ml-0.5 align-middle"
+                        style={{ animation: "blink-cursor 1s step-end infinite" }}
+                      />
+                    )}
+                  </div>
                 )}
                 <div ref={replyEndRef} />
               </div>
@@ -422,24 +448,18 @@ function ReplyContent() {
               aria-expanded={showOriginal}
               aria-label="切换原信显示"
             >
-              {showOriginal ? "收起我的原信 ▲" : "查看我的原信 📜"}
+              {showOriginal ? (
+                <span className="inline-flex items-center gap-1">收起我的原信</span>
+              ) : (
+                <span className="inline-flex items-center gap-1">
+                  <IconScroll size={14} />
+                  查看我的原信
+                </span>
+              )}
             </button>
 
             {showOriginal && (
               <div className="mt-4 relative">
-                {/* Timeline connector */}
-                <div className="flex items-center justify-center mb-4">
-                  <div className="h-px flex-1 bg-rule" />
-                  <div className="flex items-center gap-2 px-4">
-                    <div className="w-2 h-2 rounded-full bg-amber/50" />
-                    <span className="font-sans text-warm-muted text-xs">
-                      跨越{letter.recipientTime}
-                    </span>
-                    <div className="w-2 h-2 rounded-full bg-amber/50" />
-                  </div>
-                  <div className="h-px flex-1 bg-rule" />
-                </div>
-
                 {/* Original letter card */}
                 <div
                   className="bg-paper rounded-2xl p-6 md:p-10 letter-lines card-border-transition"
@@ -449,8 +469,9 @@ function ReplyContent() {
                   }}
                 >
                   <div className="flex items-start justify-between mb-6">
-                    <span className="font-sans text-sm text-[#6a5a4a]">
-                      📮 {formatDateCN(new Date(letter.createdAt))} 的我
+                    <span className="font-sans text-sm text-[#6a5a4a] inline-flex items-center gap-1">
+                      <IconPostbox size={14} />
+                      {formatDateCN(new Date(letter.createdAt))} 的我
                     </span>
                     <span className="font-sans text-xs text-[#8a7a6a]">
                       {letter.mood}
@@ -501,22 +522,34 @@ function ReplyContent() {
                 e.currentTarget.style.boxShadow = "0 0 0 rgba(212,165,116,0)";
               }}
             >
-              {saved ? "✅ 已保存到我的胶囊" : "保存到我的胶囊 💾"}
+              {saved ? (
+                <span className="inline-flex items-center justify-center gap-2">
+                  <IconCheck size={16} />
+                  已保存到我的胶囊
+                </span>
+              ) : (
+                <span className="inline-flex items-center justify-center gap-2">
+                  保存到我的胶囊
+                  <IconSave size={16} />
+                </span>
+              )}
             </button>
 
             {/* Secondary buttons */}
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-[320px]">
               <Link
                 href="/write"
-                className="w-full sm:w-auto px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift"
+                className="w-full sm:w-auto px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift inline-flex items-center justify-center gap-1.5"
               >
-                再写一封 ✍️
+                <IconPen size={14} />
+                再写一封
               </Link>
               <Link
                 href="/"
-                className="w-full sm:w-auto px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift"
+                className="w-full sm:w-auto px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift inline-flex items-center justify-center gap-1.5"
               >
-                回到首页 🏠
+                <IconHome size={14} />
+                回到首页
               </Link>
             </div>
           </div>
@@ -540,11 +573,8 @@ export default function ReplyPage() {
       fallback={
         <div className="min-h-screen flex items-center justify-center pt-20">
           <div className="text-center">
-            <div
-              className="text-3xl mb-3"
-              style={{ animation: "loading-pulse 1.5s ease-in-out infinite" }}
-            >
-              ⏳
+            <div className="mb-3 flex justify-center">
+              <IconClock size={32} color="#a89888" className="animate-spin-slow" />
             </div>
             <p className="text-warm-muted font-sans text-sm">加载中...</p>
           </div>

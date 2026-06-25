@@ -2,158 +2,116 @@
 
 import Link from "next/link";
 import { useCapsuleCount } from "@/lib/storage";
-
-function FloatingEnvelope({
-  size,
-  opacity,
-  top,
-  left,
-  delay,
-  duration,
-}: {
-  size: number;
-  opacity: number;
-  top: string;
-  left: string;
-  delay: string;
-  duration: string;
-}) {
-  return (
-    <div
-      className="absolute pointer-events-none hidden md:block"
-      style={{
-        top,
-        left,
-        opacity,
-        animation: `float-envelope ${duration} ease-in-out ${delay} infinite`,
-      }}
-    >
-      <svg
-        width={size}
-        height={size * 0.7}
-        viewBox="0 0 80 56"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-      >
-        <rect
-          x="1"
-          y="1"
-          width="78"
-          height="54"
-          rx="4"
-          stroke="rgba(212,165,116,0.3)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-        <path
-          d="M1 5L40 30L79 5"
-          stroke="rgba(212,165,116,0.3)"
-          strokeWidth="1.5"
-          fill="none"
-        />
-      </svg>
-    </div>
-  );
-}
+import { IconPen, IconEnvelope, IconHourglass, IconMailbox, IconArrowDown } from "@/components/Icons";
 
 export function HeroSection() {
   const { total: capsuleCount } = useCapsuleCount();
 
   return (
-    <section className="relative w-full pt-32 pb-20 md:pt-40 md:pb-28 px-6 text-center overflow-hidden">
-      {/* Floating envelopes */}
-      <FloatingEnvelope
-        size={60}
-        opacity={0.15}
-        top="15%"
-        left="8%"
-        delay="0s"
-        duration="6s"
-      />
-      <FloatingEnvelope
-        size={45}
-        opacity={0.1}
-        top="25%"
-        left="85%"
-        delay="1s"
-        duration="7s"
-      />
-      <FloatingEnvelope
-        size={35}
-        opacity={0.12}
-        top="60%"
-        left="12%"
-        delay="2s"
-        duration="8s"
-      />
-      <FloatingEnvelope
-        size={50}
-        opacity={0.08}
-        top="70%"
-        left="80%"
-        delay="0.5s"
-        duration="6.5s"
-      />
-
-      {/* Postmark stamp */}
-      <div className="fade-in mb-8 inline-block">
+    <section className="relative min-h-screen flex flex-col items-center justify-center px-6 overflow-hidden">
+      {/* Decorative floating envelopes */}
+      <div className="absolute inset-0 pointer-events-none overflow-hidden">
         <div
-          className="inline-flex items-center gap-2 px-5 py-2 rounded-full border-2 border-dashed border-amber/40 text-amber/70 text-xs font-sans tracking-widest"
-          style={{ transform: "rotate(-5deg)" }}
+          className="absolute top-[15%] left-[10%] opacity-20"
+          style={{ animation: "float-envelope 6s ease-in-out infinite" }}
         >
-          <span>TRAE AI 创造力大赛</span>
-          <span className="text-amber/40">·</span>
-          <span>2026</span>
+          <IconEnvelope size={48} color="#d4a574" />
+        </div>
+        <div
+          className="absolute top-[25%] right-[12%] opacity-15"
+          style={{
+            animation: "float-envelope 8s ease-in-out infinite",
+            animationDelay: "1s",
+          }}
+        >
+          <IconEnvelope size={36} color="#d4a574" />
+        </div>
+        <div
+          className="absolute bottom-[20%] left-[15%] opacity-10"
+          style={{
+            animation: "float-envelope 7s ease-in-out infinite",
+            animationDelay: "2s",
+          }}
+        >
+          <IconEnvelope size={28} color="#d4a574" />
         </div>
       </div>
 
-      {/* Main title */}
-      <h1 className="fade-in font-serif font-bold text-amber text-5xl md:text-7xl mb-6 tracking-wide">
-        时间胶囊
-      </h1>
+      {/* Main content */}
+      <div className="relative z-10 text-center max-w-[640px]">
+        {/* Eyebrow */}
+        <div className="fade-in mb-6">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-sans tracking-wide"
+            style={{ backgroundColor: "rgba(212,165,116,0.1)", color: "#d4a574" }}
+          >
+            <IconHourglass size={14} />
+            TRAE AI 创造力大赛参赛作品
+          </span>
+        </div>
 
-      {/* Subtitle */}
-      <p className="fade-in font-handwrite text-warm-white text-xl md:text-2xl mb-8">
-        给未来的自己写一封信
-      </p>
+        {/* Title */}
+        <div className="fade-in mb-6">
+          <h1 className="font-serif font-bold text-amber text-4xl md:text-5xl lg:text-6xl leading-tight tracking-tight">
+            写给未来的
+            <br />
+            一封信
+          </h1>
+        </div>
 
-      {/* Description */}
-      <p className="fade-in font-serif text-warm-muted text-sm md:text-base max-w-lg mx-auto mb-10 leading-relaxed">
-        AI帮&ldquo;未来的你&rdquo;提前回信——你不用等一年，
-        <br className="hidden md:block" />
-        就能听到未来的自己想对你说什么
-      </p>
+        {/* Subtitle */}
+        <div className="fade-in mb-10">
+          <p className="font-sans text-warm-muted text-sm md:text-base leading-relaxed max-w-md mx-auto">
+            把此刻的心情封存进时间胶囊
+            <br className="hidden md:block" />
+            AI 会扮演"未来的你"提前回信
+          </p>
+        </div>
 
-      {/* CTA Button */}
-      <div className="fade-in">
-        <Link
-          href="/write"
-          className="inline-flex items-center gap-2 px-8 py-3.5 bg-amber text-bg-deep font-sans font-semibold text-sm rounded-full hover:bg-amber-light transition-all duration-300 hover:shadow-lg hover:shadow-amber/20"
-          style={{ animation: "glow-pulse 3s ease-in-out infinite" }}
-        >
-          开始写信 ✉️
-        </Link>
-      </div>
+        {/* CTA Buttons */}
+        <div className="fade-in flex flex-col sm:flex-row items-center justify-center gap-4 mb-12">
+          <Link
+            href="/write"
+            className="w-full sm:w-auto px-8 py-4 bg-amber text-bg-deep font-sans font-semibold text-sm rounded-full hover:bg-amber-light transition-all duration-300 btn-lift"
+            style={{
+              boxShadow: "0 8px 32px rgba(212,165,116,0.25)",
+            }}
+          >
+            <span className="flex items-center justify-center gap-2">
+              <IconPen size={16} />
+              写一封信
+            </span>
+          </Link>
 
-      {/* Capsule count hint */}
-      {capsuleCount > 0 && (
-        <div className="fade-in mt-5">
           <Link
             href="/capsules"
-            className="font-sans text-warm-muted/70 text-xs hover:text-amber transition-colors"
+            className="w-full sm:w-auto px-8 py-4 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all duration-300 btn-lift"
           >
-            你已经写了 {capsuleCount} 封信 · 查看我的胶囊 →
+            <span className="flex items-center justify-center gap-2">
+              <IconMailbox size={16} />
+              查看我的胶囊
+            </span>
           </Link>
         </div>
-      )}
 
-      {/* Bounce arrow */}
+        {/* Capsule count hint */}
+        {capsuleCount > 0 && (
+          <div className="fade-in">
+            <p className="font-sans text-warm-muted/60 text-xs">
+              已封存 {capsuleCount} 封信
+            </p>
+          </div>
+        )}
+      </div>
+
+      {/* Scroll hint */}
       <div
-        className="absolute bottom-8 left-1/2 text-warm-muted/50 text-sm font-sans flex flex-col items-center gap-1"
+        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
         style={{ animation: "bounce-down 2s ease-in-out infinite" }}
       >
-        <span>往下看看</span>
-        <span>↓</span>
+        <span className="font-sans text-warm-muted/40 text-xs">
+          往下看看
+        </span>
+        <IconArrowDown size={16} color="#a89888" />
       </div>
     </section>
   );

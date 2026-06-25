@@ -1,18 +1,20 @@
+import { IconPen, IconEnvelope, IconHourglass, IconSparkles } from "@/components/Icons";
+
 const features = [
   {
-    emoji: "✍️",
+    icon: <IconPen size={32} className="text-amber" />,
     title: "写给未来",
     description:
       "在信纸上给1年后的自己写信，设定你的目标、愿望和此刻的心情",
   },
   {
-    emoji: "💌",
+    icon: <IconEnvelope size={32} className="text-amber" />,
     title: "AI 回信",
     description:
       "「未来的你」根据信件内容温柔回复，不是鸡汤，而是基于你目标的理性+感性分析",
   },
   {
-    emoji: "⏰",
+    icon: <IconHourglass size={32} className="text-amber" />,
     title: "真实封存",
     description:
       "信件被封存1年，到期后发送通知，届时打开信件验证「未来的你」说得准不准",
@@ -21,12 +23,13 @@ const features = [
 
 export function FeaturesSection() {
   return (
-    <section className="w-full px-6 py-20 md:py-28 border-t border-rule">
+    <section className="w-full px-6 py-20 md:py-28">
       <div className="max-w-[900px] mx-auto">
         {/* Section title */}
         <div className="fade-in text-center mb-14">
           <h2 className="font-serif text-warm-white text-xl md:text-2xl">
-            ✨ 时间胶囊能做什么
+            <IconSparkles size={20} className="text-amber inline-block mr-2" />
+            时间胶囊能做什么
           </h2>
         </div>
 
@@ -41,7 +44,7 @@ export function FeaturesSection() {
                 borderColor: "rgba(212,165,116,0.15)",
               }}
             >
-              <div className="text-4xl mb-4">{feature.emoji}</div>
+              <div className="mb-4">{feature.icon}</div>
               <h3 className="font-serif font-bold text-warm-white text-lg mb-3">
                 {feature.title}
               </h3>

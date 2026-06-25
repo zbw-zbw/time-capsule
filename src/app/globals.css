@@ -31,6 +31,24 @@ body {
   overflow-x: hidden;
 }
 
+/* Global cursor for interactive elements */
+button,
+a,
+[role="button"],
+[role="radio"],
+[role="option"],
+[role="tab"],
+select,
+summary,
+.cursor-pointer {
+  cursor: pointer;
+}
+
+input[type="text"],
+textarea {
+  cursor: text;
+}
+
 /* Subtle warm light texture */
 body::before {
   content: '';
@@ -137,6 +155,15 @@ body::before {
   50% { opacity: 1; }
 }
 
+@keyframes spin-slow {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.animate-spin-slow {
+  animation: spin-slow 2.5s linear infinite;
+}
+
 /* ===== Intersection Observer Fade-in ===== */
 
 .fade-in {
@@ -192,6 +219,26 @@ body::before {
 
 ::-webkit-scrollbar-thumb:hover {
   background: #4a4038;
+}
+
+/* ===== Markdown Body Styles ===== */
+
+.markdown-body p {
+  margin-bottom: 0.75rem;
+}
+
+.markdown-body ul {
+  list-style-type: disc;
+  padding-left: 1.5rem;
+}
+
+.markdown-body ol {
+  list-style-type: decimal;
+  padding-left: 1.5rem;
+}
+
+.markdown-body strong {
+  font-weight: 700;
 }
 
 /* ===== Reduced Motion ===== */

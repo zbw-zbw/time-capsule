@@ -1,11 +1,14 @@
+import { IconLightbulb } from "@/components/Icons";
+
 export function ComparisonSection() {
   return (
-    <section className="w-full px-6 py-20 md:py-28 border-t border-rule">
+    <section className="w-full px-6 py-20 md:py-28">
       <div className="max-w-[900px] mx-auto">
         {/* Section title */}
         <div className="fade-in text-center mb-14">
           <h2 className="font-serif text-warm-white text-xl md:text-2xl">
-            💡 为什么不是普通时间胶囊
+            <IconLightbulb size={20} className="text-amber inline-block mr-2" />
+            为什么不是普通时间胶囊
           </h2>
         </div>
 

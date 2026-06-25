@@ -12,10 +12,18 @@ import {
   saveLetter,
 } from "@/lib/storage";
 import { SealAnimation } from "@/components/SealAnimation";
+import { IconPen, IconEnvelope, IconSmile, IconFrown, IconZap, IconHeartBroken, IconMeh, IconLightbulb, IconWarning } from "@/components/Icons";
 
 const RECIPIENT_OPTIONS: RecipientTime[] = ["1年后", "6个月后", "3年后", "5年后"];
 
-const MOODS = ["😊 期待", "😰 焦虑", "💪 充满干劲", "😢 有点难过", "🤔 迷茫", "😌 平静"];
+const MOODS = [
+  { label: "期待", icon: IconSmile },
+  { label: "焦虑", icon: IconFrown },
+  { label: "充满干劲", icon: IconZap },
+  { label: "有点难过", icon: IconHeartBroken },
+  { label: "迷茫", icon: IconMeh },
+  { label: "平静", icon: IconLightbulb },
+];
 
 const DRAFT_KEY = "time-capsule-draft";
 
@@ -151,8 +159,8 @@ export default function WritePage() {
   // Validation
   const validate = useCallback((): boolean => {
     const errs: typeof errors = {};
-    if (content.trim().length < 20) {
-      errs.content = "再多写几句吧，未来的你想听到更多";
+    if (content.trim().length < 10) {
+      errs.content = "再多写几句吧，至少 10 字，未来的你想听到更多";
     }
     const nonEmptyWishes = wishes.filter((w) => w.trim().length > 0);
     if (nonEmptyWishes.length < 1) {
@@ -197,8 +205,9 @@ export default function WritePage() {
     <div className="min-h-screen pt-24 pb-20 px-4 md:px-6">
       {/* Top info bar */}
       <div className="max-w-[720px] mx-auto text-center mb-6">
-        <h1 className="font-serif font-bold text-amber text-xl md:text-2xl mb-2">
-          ✍️ 写一封信给未来的自己
+        <h1 className="font-serif font-bold text-amber text-xl md:text-2xl mb-2 flex items-center justify-center gap-2">
+          <IconPen size={22} color="#d4a574" />
+          写一封信给未来的自己
         </h1>
         <p className="font-sans text-warm-muted text-xs md:text-sm">
           把此刻的想法封存起来，让 AI 帮&quot;未来的你&quot;先回一封
@@ -340,12 +349,18 @@ export default function WritePage() {
             )}
             {/* Character count */}
             <p
-              className="font-sans text-xs text-right mt-1 absolute -bottom-5 right-0"
-              style={{ color: isOverLimit ? "#d4a574" : "#a89888" }}
+              className="font-sans text-xs text-right mt-1 absolute -bottom-5 right-0 flex items-center gap-1"
+              style={{ color: contentLength < 10 && contentLength > 0 ? "#c46a4a" : isOverLimit ? "#d4a574" : "#a89888" }}
               aria-live="polite"
             >
+              {contentLength < 10 && contentLength > 0 && (
+                <span className="inline-flex items-center gap-0.5">
+                  <IconWarning size={12} color="#c46a4a" />
+                  至少 10 字
+                </span>
+              )}
               已写 {contentLength} 字
-              {contentLength < 20 && contentLength > 0 && "（至少 20 字）"}
+              {contentLength >= 10 && contentLength < 20 && "（可以提交了）"}
             </p>
           </div>
 
@@ -420,13 +435,14 @@ export default function WritePage() {
             <p className="font-handwrite text-[#2a2420] text-lg mb-3">此刻的心情：</p>
             <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="选择心情">
               {MOODS.map((m) => {
-                const selected = mood === m;
+                const selected = mood === m.label;
+                const Icon = m.icon;
                 return (
                   <button
-                    key={m}
+                    key={m.label}
                     type="button"
-                    onClick={() => handleMoodSelect(m)}
-                    className="px-4 py-2 rounded-full text-sm font-sans"
+                    onClick={() => handleMoodSelect(m.label)}
+                    className="px-4 py-2 rounded-full text-sm font-sans inline-flex items-center gap-1.5"
                     role="radio"
                     aria-checked={selected}
                     style={{
@@ -436,12 +452,13 @@ export default function WritePage() {
                       cursor: "pointer",
                       transition: "all 0.2s cubic-bezier(0.22, 1, 0.36, 1)",
                       animation:
-                        selected && moodAnimKey?.startsWith(m)
+                        selected && moodAnimKey?.startsWith(m.label)
                           ? "mood-bounce 0.4s cubic-bezier(0.22, 1, 0.36, 1)"
                           : "none",
                     }}
                   >
-                    {m}
+                    <Icon size={14} color={selected ? "#1a1512" : "#a89888"} />
+                    {m.label}
                   </button>
                 );
               })}
@@ -482,7 +499,14 @@ export default function WritePage() {
           }}
           aria-label="封存信件"
         >
-          {isSubmitting ? "正在封存..." : "封存信件，等待回信 💌"}
+          {isSubmitting ? (
+            "正在封存..."
+          ) : (
+            <span className="inline-flex items-center justify-center gap-2">
+              封存信件，等待回信
+              <IconEnvelope size={16} color="#1a1512" />
+            </span>
+          )}
         </button>
         <p className="font-sans text-warm-muted text-xs mt-3">
           信件将被封存，AI 将以&quot;未来的你&quot;的身份回信

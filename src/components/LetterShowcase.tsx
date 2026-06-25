@@ -1,6 +1,8 @@
+import { IconMailbox, IconEnvelope, IconHourglass, IconRobot, IconArrowDown, IconCheck, IconBook, IconPlane } from "@/components/Icons";
+
 export function LetterShowcase() {
   return (
-    <section className="w-full px-6 py-20 md:py-28 border-t border-rule">
+    <section className="w-full px-6 py-20 md:py-28">
       <div className="max-w-[900px] mx-auto">
         {/* Section title */}
         <div className="fade-in text-center mb-16">
@@ -25,7 +27,7 @@ export function LetterShowcase() {
             {/* Sender label */}
             <div className="flex items-center justify-between mb-6">
               <span className="text-sm font-sans text-[#6a5a4a]">
-                📮 2026年6月的我
+                <IconMailbox size={14} className="inline-block mr-1" /> 2026年6月的我
               </span>
               {/* Postmark stamp: double-ring, aged effect */}
               <div
@@ -144,12 +146,12 @@ export function LetterShowcase() {
               />
             </svg>
             {/* Arrow */}
-            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 text-amber/60 text-lg">
-              ↓
+            <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 text-amber/60">
+              <IconArrowDown size={16} className="inline-block" />
             </div>
           </div>
           <p className="text-warm-muted/70 text-xs font-sans tracking-wide">
-            ⏳ AI 模拟&ldquo;未来的你&rdquo;回信中...
+            <IconHourglass size={14} className="inline-block mr-1" /> AI 模拟&ldquo;未来的你&rdquo;回信中...
           </p>
         </div>
 
@@ -167,7 +169,7 @@ export function LetterShowcase() {
             {/* AI label */}
             <div className="flex items-center justify-between mb-6">
               <span className="text-sm font-sans text-[#6a5a4a]">
-                💌 2027年6月的你
+                <IconEnvelope size={14} className="inline-block mr-1" /> 2027年6月的你
               </span>
               <div className="flex items-center gap-2">
                 {/* Smaller, subtler AI tag */}
@@ -175,7 +177,7 @@ export function LetterShowcase() {
                   className="inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-amber/15 text-amber text-[11px] font-sans font-medium"
                   style={{ letterSpacing: "0.02em" }}
                 >
-                  <span className="text-[10px]">🤖</span>
+                  <IconRobot size={10} className="inline-block" />
                   <span>AI 生成</span>
                 </span>
                 {/* Postmark stamp for reply */}
@@ -229,17 +231,17 @@ export function LetterShowcase() {
               </p>
               <p className="mb-4">关于那三个愿望：</p>
               <p className="mb-1 ml-4">
-                ✅ 同事已经不只是同事了，你们周末还一起打过羽毛球
+                <IconCheck size={14} className="inline-block mr-1" /> 同事已经不只是同事了，你们周末还一起打过羽毛球
               </p>
               <p className="mb-1 ml-4">
-                📖 系统设计…说实话学了一半，但你开始写技术博客了，
+                <IconBook size={14} className="inline-block mr-1" /> 系统设计…说实话学了一半，但你开始写技术博客了，
                 <br />
                 <span className="ml-8">
                   这是当初没想到的意外收获
                 </span>
               </p>
               <p className="mb-4 ml-4">
-                ✈️ 旅行基金存了八千，差一点点。不过你去了一次厦门，
+                <IconPlane size={14} className="inline-block mr-1" /> 旅行基金存了八千，差一点点。不过你去了一次厦门，
                 <br />
                 <span className="ml-8">拍了很美的照片</span>
               </p>

@@ -3,6 +3,13 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { getLetters, type TimeCapsuleLetter, formatDateCN } from "@/lib/storage";
+import {
+  IconCalendar,
+  IconClock,
+  IconCheck,
+  IconPen,
+  IconMailbox,
+} from "@/components/Icons";
 
 function getDaysUntilOpen(openAt: string): number {
   const diff = new Date(openAt).getTime() - Date.now();
@@ -81,8 +88,8 @@ function CapsuleCard({
 
   const statusLabel =
     letter.status === "opened"
-      ? "✅ 已开启"
-      : `⏳ 还有 ${daysLeft} 天开启`;
+      ? "已开启"
+      : `还有 ${daysLeft} 天开启`;
 
   return (
     <div
@@ -144,7 +151,8 @@ function CapsuleCard({
                   color: "#d4a574",
                 }}
               >
-                📅 {letter.recipientTime}期胶囊
+                <IconCalendar size={14} className="mr-1" />
+                {letter.recipientTime}期胶囊
               </span>
               <span className="text-sm">{letter.mood}</span>
             </div>
@@ -213,10 +221,10 @@ export default function CapsulesPage() {
       <div className="min-h-screen flex items-center justify-center pt-20">
         <div className="text-center">
           <div
-            className="text-3xl mb-3"
+            className="mb-3 inline-block"
             style={{ animation: "loading-pulse 1.5s ease-in-out infinite" }}
           >
-            ⏳
+            <IconClock size={32} />
           </div>
           <p className="text-warm-muted font-sans text-sm">加载中...</p>
         </div>
@@ -249,7 +257,8 @@ export default function CapsulesPage() {
             href="/write"
             className="inline-flex items-center gap-2 px-8 py-3.5 bg-amber text-bg-deep font-sans font-semibold text-sm rounded-full hover:bg-amber-light transition-all duration-300 btn-lift"
           >
-            写第一封信 ✍️
+            <IconPen size={16} />
+            写第一封信
           </Link>
         </div>
       </div>
@@ -261,8 +270,9 @@ export default function CapsulesPage() {
       <div className="max-w-[900px] mx-auto">
         {/* Header */}
         <div className="text-center mb-10">
-          <h1 className="font-serif font-bold text-amber text-2xl md:text-3xl mb-2">
-            📬 我的时间胶囊
+          <h1 className="font-serif font-bold text-amber text-2xl md:text-3xl mb-2 inline-flex items-center gap-2 justify-center">
+            <IconMailbox size={28} />
+            我的时间胶囊
           </h1>
           <p className="font-handwrite text-warm-muted text-base md:text-lg mb-3">
             每一封信都是一颗种子，等待时间让它生长
@@ -307,12 +317,6 @@ export default function CapsulesPage() {
 
         {/* Timeline */}
         <div className="relative">
-          {/* Vertical line */}
-          <div
-            className="absolute top-0 bottom-0 left-[17px] md:left-1/2 md:-translate-x-1/2 w-0.5"
-            style={{ backgroundColor: "rgba(212,165,116,0.3)" }}
-          />
-
           {/* Items */}
           <div className="space-y-8 md:space-y-10">
             {filteredLetters.map((letter, i) => (
@@ -334,14 +338,14 @@ export default function CapsulesPage() {
       {/* Floating FAB */}
       <Link
         href="/write"
-        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-amber flex items-center justify-center text-bg-deep text-xl z-40 transition-all duration-300 hover:scale-105 btn-lift"
+        className="fixed bottom-6 right-6 w-14 h-14 rounded-full bg-amber flex items-center justify-center text-bg-deep z-40 transition-all duration-300 hover:scale-105 btn-lift"
         style={{
           boxShadow:
             "0 4px 20px rgba(212,165,116,0.3), 0 0 40px rgba(212,165,116,0.1)",
         }}
         aria-label="写一封信"
       >
-        ✍️
+        <IconPen size={24} />
       </Link>
     </div>
   );

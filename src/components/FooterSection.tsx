@@ -2,7 +2,7 @@ import Link from "next/link";
 
 export function FooterSection() {
   return (
-    <section className="w-full px-6 py-20 md:py-28 border-t border-rule">
+    <section className="w-full px-6 py-20 md:py-28">
       <div className="max-w-[900px] mx-auto text-center">
         {/* Closing quote */}
         <div className="fade-in mb-10">

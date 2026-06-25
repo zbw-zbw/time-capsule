@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { IconEnvelope } from "@/components/Icons";
 
 interface SealAnimationProps {
   letterId: string;
@@ -224,8 +225,9 @@ export function SealAnimation({ letterId, letterPreview, onComplete }: SealAnima
             transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
           }}
         >
-          <p className="font-serif text-amber text-xl mb-2">
-            ✉️ 信件已封存
+          <p className="font-serif text-amber text-xl mb-2 inline-flex items-center justify-center gap-2">
+            <IconEnvelope size={22} />
+            信件已封存
           </p>
           <p className="font-sans text-warm-muted text-sm">
             AI 正在以&quot;未来的你&quot;的身份写回信...
