@@ -1,0 +1,211 @@
+@import "tailwindcss";
+
+/* ===== Design System: Time Capsule ===== */
+
+@theme inline {
+  /* Colors */
+  --color-bg-deep: #1a1512;
+  --color-bg-warm: #231e19;
+  --color-paper: #faf3e8;
+  --color-paper-alt: #f0e8db;
+  --color-amber: #d4a574;
+  --color-amber-light: #e8c49a;
+  --color-warm-white: #f5efe6;
+  --color-warm-muted: #a89888;
+  --color-rose: #c9a0a0;
+  --color-seal-red: #8a3a2a;
+  --color-seal-glow: #c0543a;
+  --color-rule: rgba(212,165,116,0.15);
+
+  /* Fonts */
+  --font-handwrite: var(--font-long-cang);
+  --font-serif: var(--font-noto-serif-sc);
+  --font-sans: var(--font-inter);
+}
+
+/* ===== Base Styles ===== */
+
+body {
+  background-color: #1a1512;
+  color: #f5efe6;
+  overflow-x: hidden;
+}
+
+/* Subtle warm light texture */
+body::before {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  pointer-events: none;
+  z-index: 0;
+  background-image:
+    radial-gradient(ellipse at 30% 20%, rgba(212,165,116,0.06) 0%, transparent 50%),
+    radial-gradient(ellipse at 70% 60%, rgba(201,160,160,0.04) 0%, transparent 40%),
+    radial-gradient(ellipse at 50% 90%, rgba(212,165,116,0.03) 0%, transparent 45%);
+}
+
+/* ===== Keyframe Animations ===== */
+
+@keyframes float-envelope {
+  0%, 100% {
+    transform: translateY(-20px) rotate(-2deg);
+  }
+  50% {
+    transform: translateY(20px) rotate(2deg);
+  }
+}
+
+@keyframes seal-pulse {
+  0%, 100% {
+    box-shadow: 0 0 20px rgba(192,84,58,0.3), 0 0 40px rgba(192,84,58,0.1);
+  }
+  50% {
+    box-shadow: 0 0 30px rgba(192,84,58,0.5), 0 0 60px rgba(192,84,58,0.2);
+  }
+}
+
+@keyframes typewriter {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+@keyframes unfold-letter {
+  from {
+    opacity: 0;
+    max-height: 0;
+    transform: scaleY(0.95);
+  }
+  to {
+    opacity: 1;
+    max-height: 2000px;
+    transform: scaleY(1);
+  }
+}
+
+@keyframes bounce-down {
+  0%, 100% {
+    transform: translateX(-50%) translateY(0);
+  }
+  50% {
+    transform: translateX(-50%) translateY(8px);
+  }
+}
+
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes glow-pulse {
+  0%, 100% {
+    box-shadow: 0 0 15px rgba(212,165,116,0.2);
+  }
+  50% {
+    box-shadow: 0 0 25px rgba(212,165,116,0.4);
+  }
+}
+
+@keyframes mood-bounce {
+  0% { transform: scale(1); }
+  40% { transform: scale(1.12); }
+  70% { transform: scale(0.96); }
+  100% { transform: scale(1); }
+}
+
+@keyframes stagger-fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes loading-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 1; }
+}
+
+/* ===== Intersection Observer Fade-in ===== */
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(30px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.fade-in.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== Letter Lines Texture ===== */
+/* Handwrite baseline sits exactly on the rule line at 31px */
+.letter-lines {
+  background-image: repeating-linear-gradient(
+    transparent,
+    transparent 31px,
+    rgba(180,160,130,0.18) 31px,
+    rgba(180,160,130,0.18) 32px
+  );
+  line-height: 32px;
+}
+
+/* ===== Button Hover Lift ===== */
+.btn-lift {
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.btn-lift:hover {
+  transform: translateY(-1px);
+}
+
+/* ===== Card Border Transition ===== */
+.card-border-transition {
+  transition: border-color 0.3s cubic-bezier(0.22, 1, 0.36, 1), box-shadow 0.3s cubic-bezier(0.22, 1, 0.36, 1), transform 0.3s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+/* ===== Scrollbar Styling ===== */
+
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-track {
+  background: #1a1512;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #3a3028;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #4a4038;
+}
+
+/* ===== Reduced Motion ===== */
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .fade-in {
+    opacity: 1;
+    transform: none;
+  }
+}
