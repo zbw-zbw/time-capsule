@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { getLetters, type TimeCapsuleLetter, formatDateCN } from "@/lib/storage";
+import { getLetters, type TimeCapsuleLetter, formatDateCN, isLetterOpenable } from "@/lib/storage";
 import {
   IconCalendar,
   IconClock,
@@ -10,6 +10,7 @@ import {
   IconPen,
   IconMailbox,
 } from "@/components/Icons";
+import { Countdown } from "@/components/Countdown";
 
 function getDaysUntilOpen(openAt: string): number {
   const diff = new Date(openAt).getTime() - Date.now();
@@ -79,17 +80,19 @@ function CapsuleCard({
   letter: TimeCapsuleLetter;
   index: number;
 }) {
-  const daysLeft = getDaysUntilOpen(letter.openAt);
   const summary =
     letter.content.slice(0, 30) + (letter.content.length > 30 ? "..." : "");
   const visibleWishes = letter.wishes.slice(0, 2);
   const hiddenWishes = letter.wishes.length - 2;
   const isEven = index % 2 === 1;
+  const openable = isLetterOpenable(letter);
 
   const statusLabel =
     letter.status === "opened"
       ? "已开启"
-      : `还有 ${daysLeft} 天开启`;
+      : openable
+      ? "时间已到"
+      : "封印中";
 
   return (
     <div
@@ -186,15 +189,13 @@ function CapsuleCard({
               <span className="font-sans text-warm-muted/60 text-xs">
                 写于 {formatDateCN(new Date(letter.createdAt))}
               </span>
-              <span
-                className={`font-sans text-xs ${
-                  letter.status === "opened"
-                    ? "text-warm-muted/60"
-                    : "text-amber"
-                }`}
-              >
-                {statusLabel}
-              </span>
+              {letter.status === "opened" ? (
+                <span className="font-sans text-xs text-warm-muted/60">{statusLabel}</span>
+              ) : openable ? (
+                <span className="font-sans text-xs text-amber">{statusLabel}</span>
+              ) : (
+                <Countdown targetDate={letter.openAt} size="sm" showSeconds={false} />
+              )}
             </div>
           </div>
         </Link>

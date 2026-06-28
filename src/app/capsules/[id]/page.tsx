@@ -10,6 +10,8 @@ import {
   deleteLetter,
   formatDateCN,
   getSalutation,
+  isLetterOpenable,
+  openLetter,
   type TimeCapsuleLetter,
 } from "@/lib/storage";
 import {
@@ -22,59 +24,7 @@ import {
   IconRobot,
   IconInbox,
 } from "@/components/Icons";
-
-function Countdown({ targetDate }: { targetDate: string }) {
-  const [now, setNow] = useState(Date.now());
-
-  useEffect(() => {
-    const timer = setInterval(() => setNow(Date.now()), 1000);
-    return () => clearInterval(timer);
-  }, []);
-
-  const target = new Date(targetDate).getTime();
-  const diff = Math.max(0, target - now);
-
-  const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-  const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-  const seconds = Math.floor((diff % (1000 * 60)) / 1000);
-
-  const blocks = [
-    { value: days, unit: "天" },
-    { value: hours, unit: "时" },
-    { value: minutes, unit: "分" },
-    { value: seconds, unit: "秒" },
-  ];
-
-  return (
-    <div className="text-center mb-10">
-      <p className="font-sans text-warm-muted text-sm mb-4 inline-flex items-center gap-1 justify-center">
-        <IconClock size={14} />
-        距离开启还有
-      </p>
-      <div className="flex items-center justify-center gap-2 md:gap-3">
-        {blocks.map((block, i) => (
-          <div key={i} className="flex items-center gap-2 md:gap-3">
-            <div
-              className="w-12 h-14 md:w-16 md:h-20 rounded-lg flex flex-col items-center justify-center"
-              style={{ backgroundColor: "rgba(35,30,25,0.8)", border: "1px solid rgba(212,165,116,0.2)" }}
-            >
-              <span className="font-serif text-amber text-xl md:text-2xl font-bold">
-                {String(block.value).padStart(2, "0")}
-              </span>
-              <span className="font-sans text-warm-muted/60 text-[10px] md:text-xs">
-                {block.unit}
-              </span>
-            </div>
-            {i < 3 && (
-              <span className="text-amber/50 text-lg md:text-xl font-bold">:</span>
-            )}
-          </div>
-        ))}
-      </div>
-    </div>
-  );
-}
+import { Countdown } from "@/components/Countdown";
 
 function DeleteModal({
   onConfirm,
@@ -133,6 +83,7 @@ function CapsuleDetail() {
   const letterId = params.id as string;
 
   const [letter, setLetter] = useState<TimeCapsuleLetter | null>(null);
+  const [opened, setOpened] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
@@ -152,6 +103,7 @@ function CapsuleDetail() {
           // ignore errors
         }
       }
+      setOpened(found.status === "opened");
       setLetter(found);
     } else {
       setLetter(null);
@@ -162,6 +114,11 @@ function CapsuleDetail() {
     deleteLetter(letterId);
     router.push("/capsules");
   }, [letterId, router]);
+
+  const handleOpen = useCallback(() => {
+    openLetter(letterId);
+    setOpened(true);
+  }, [letterId]);
 
   if (!mounted) {
     return (
@@ -206,7 +163,7 @@ function CapsuleDetail() {
   const salutation = getSalutation(letter.recipientTime);
   const openDate = new Date(letter.openAt);
   const createDate = new Date(letter.createdAt);
-  const showCountdown = letter.status !== "opened";
+  const openable = isLetterOpenable(letter);
   const showReply = !!letter.aiReply;
 
   return (
@@ -231,29 +188,46 @@ function CapsuleDetail() {
                 letter.status === "opened" ? "#a89888" : "#d4a574",
             }}
           >
-            {letter.status === "opened" ? (
+            {opened ? (
               <>
                 <IconCheck size={12} />
                 已开启
               </>
-            ) : letter.status === "replied" ? (
+            ) : openable ? (
               <>
-                <IconEnvelope size={12} />
-                已回信
+                <IconClock size={12} />
+                可开启
               </>
             ) : (
               <>
                 <IconClock size={12} />
-                等待中
+                封印中
               </>
             )}
           </span>
         </div>
 
-        {/* Countdown */}
-        {showCountdown && <Countdown targetDate={letter.openAt} />}
+        {/* Countdown / Open action */}
+        {!opened && (
+          <div className="mb-8 text-center">
+            <Countdown targetDate={letter.openAt} size="lg" />
+            <p className="mt-3 font-sans text-warm-muted text-xs">
+              这封信将在 {openDate.toLocaleString("zh-CN")} 开启
+            </p>
+            {openable && (
+              <button
+                onClick={handleOpen}
+                className="mt-6 px-6 py-2.5 rounded-full bg-amber text-[#1a1512] font-sans text-sm font-medium hover:bg-amber/90 transition-all"
+                style={{ animation: "pulse-glow 2s ease-in-out infinite" }}
+              >
+                开启胶囊
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Original Letter */}
+        {opened && (
         <div className="mb-4">
           <div
             className="relative bg-paper rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
@@ -295,9 +269,10 @@ function CapsuleDetail() {
             )}
           </div>
         </div>
+        )}
 
         {/* AI Reply */}
-        {showReply && (
+        {opened && showReply && (
           <div className="mb-8">
             <div
               className="relative bg-paper-alt rounded-2xl p-4 md:p-10 letter-lines card-border-transition"

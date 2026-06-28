@@ -10,6 +10,8 @@ import {
   getTodayCN,
   getMonthYearCN,
   saveLetter,
+  isDemoMode,
+  setDemoMode,
 } from "@/lib/storage";
 import { SealAnimation } from "@/components/SealAnimation";
 import { IconPen, IconEnvelope, IconSmile, IconFrown, IconZap, IconHeartBroken, IconMeh, IconLightbulb, IconWarning } from "@/components/Icons";
@@ -85,10 +87,15 @@ export default function WritePage() {
   const [contentFocus, setContentFocus] = useState(false);
   const [focusedWishIndex, setFocusedWishIndex] = useState<number | null>(null);
   const [moodAnimKey, setMoodAnimKey] = useState<string | null>(null);
+  const [demoMode, setDemoModeLocal] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const draftRef = useRef<DraftData>({ recipient: "1年后", content: "", wishes: ["", "", ""], mood: "" });
 
-  const openDate = useMemo(() => calculateOpenDate(recipient), [recipient]);
+  useEffect(() => {
+    setDemoModeLocal(isDemoMode());
+  }, []);
+
+  const openDate = useMemo(() => calculateOpenDate(recipient, demoMode), [recipient, demoMode]);
   const salutation = useMemo(() => getSalutation(recipient), [recipient]);
 
   // Sync ref for beforeunload check
@@ -183,7 +190,6 @@ export default function WritePage() {
       content: content.trim(),
       wishes: wishes.filter((w) => w.trim().length > 0),
       mood,
-      openAt: openDate.toISOString(),
     });
 
     // Clear draft after successful submit
@@ -301,9 +307,40 @@ export default function WritePage() {
                 className="inline-block px-3 py-1 rounded-full border-2 border-dashed border-amber/50 text-amber text-xs font-sans"
                 style={{ transform: "rotate(-3deg)" }}
               >
-                {formatDateCN(openDate)} 开
+                {demoMode ? "3 分钟后" : formatDateCN(openDate)} 开
               </span>
             </div>
+          </div>
+
+          {/* Demo mode toggle */}
+          <div className="flex items-center justify-between mt-3 mb-1">
+            <button
+              type="button"
+              onClick={() => {
+                const next = !demoMode;
+                setDemoModeLocal(next);
+                setDemoMode(next);
+              }}
+              className="inline-flex items-center gap-2 text-xs font-sans text-amber/80 hover:text-amber transition-colors"
+              role="switch"
+              aria-checked={demoMode}
+            >
+              <span
+                className="relative inline-flex h-5 w-9 items-center rounded-full transition-colors"
+                style={{ backgroundColor: demoMode ? "#d4a574" : "rgba(168,152,136,0.3)" }}
+              >
+                <span
+                  className="inline-block h-3.5 w-3.5 transform rounded-full bg-paper transition-transform"
+                  style={{ transform: demoMode ? "translateX(18px)" : "translateX(2px)" }}
+                />
+              </span>
+              演示模式：3 分钟后开启
+            </button>
+            {demoMode && (
+              <span className="text-[11px] text-amber/60 font-sans">
+                新胶囊将在 3 分钟后可开启
+              </span>
+            )}
           </div>
 
           {/* 2. Salutation */}

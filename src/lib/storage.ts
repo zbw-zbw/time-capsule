@@ -16,6 +16,7 @@ export interface TimeCapsuleLetter {
 
 const STORAGE_KEY = "time-capsule-letters";
 const STORAGE_CHANGE_EVENT = "capsule-storage-change";
+const DEMO_MODE_KEY = "time-capsule-demo-mode";
 
 function notifyStorageChange() {
   if (typeof window !== "undefined") {
@@ -27,9 +28,13 @@ function generateId(): string {
   return "tc-" + Date.now().toString(36) + "-" + Math.random().toString(36).slice(2, 8);
 }
 
-export function calculateOpenDate(recipientTime: RecipientTime): Date {
+export function calculateOpenDate(recipientTime: RecipientTime, demoMode = false): Date {
   const now = new Date();
   const result = new Date(now);
+  if (demoMode) {
+    result.setMinutes(result.getMinutes() + 3);
+    return result;
+  }
   switch (recipientTime) {
     case "6个月后":
       result.setMonth(result.getMonth() + 6);
@@ -77,13 +82,14 @@ export function getMonthYearCN(date: Date): string {
   return `${y}年${m}月`;
 }
 
-export function saveLetter(letter: Omit<TimeCapsuleLetter, "id" | "createdAt" | "status">): TimeCapsuleLetter {
+export function saveLetter(letter: Omit<TimeCapsuleLetter, "id" | "createdAt" | "status" | "openAt">): TimeCapsuleLetter {
   const letters = getLetters();
   const newLetter: TimeCapsuleLetter = {
     ...letter,
     id: generateId(),
     createdAt: new Date().toISOString(),
     status: "sealed",
+    openAt: calculateOpenDate(letter.recipientTime, isDemoMode()).toISOString(),
   };
   letters.unshift(newLetter);
   localStorage.setItem(STORAGE_KEY, JSON.stringify(letters));
@@ -129,6 +135,32 @@ export function getLetterCount(): number {
 
 export function getUnopenedCount(): number {
   return getLetters().filter((l) => l.status !== "opened").length;
+}
+
+export function isDemoMode(): boolean {
+  if (typeof window === "undefined") return false;
+  return localStorage.getItem(DEMO_MODE_KEY) === "true";
+}
+
+export function setDemoMode(enabled: boolean): void {
+  if (typeof window === "undefined") return;
+  localStorage.setItem(DEMO_MODE_KEY, String(enabled));
+}
+
+export function isLetterOpenable(letter: TimeCapsuleLetter): boolean {
+  if (letter.status === "opened") return false;
+  const openAt = letter.openAt ? new Date(letter.openAt) : new Date(0);
+  return new Date() >= openAt;
+}
+
+export function openLetter(id: string): void {
+  const letters = getLetters();
+  const index = letters.findIndex((l) => l.id === id);
+  if (index !== -1) {
+    letters[index].status = "opened";
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(letters));
+    notifyStorageChange();
+  }
 }
 
 // ===== Event-driven hooks =====
