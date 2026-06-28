@@ -1,6 +1,6 @@
 export type RecipientTime = "1年后" | "6个月后" | "3年后" | "5年后";
 export type LetterStatus = "draft" | "sealed" | "replied" | "opened";
-export type Mood = "😊 期待" | "😰 焦虑" | "💪 充满干劲" | "😢 有点难过" | "🤔 迷茫" | "😌 平静";
+export type Mood = "期待" | "焦虑" | "充满干劲" | "有点难过" | "迷茫" | "平静";
 
 export interface TimeCapsuleLetter {
   id: string;

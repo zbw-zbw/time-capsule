@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useCapsuleCount } from "@/lib/storage";
-import { IconPen, IconEnvelope, IconHourglass, IconMailbox, IconArrowDown } from "@/components/Icons";
+import { IconPen, IconEnvelope, IconHourglass, IconMailbox } from "@/components/Icons";
 
 export function HeroSection() {
   const { total: capsuleCount } = useCapsuleCount();
@@ -45,7 +45,7 @@ export function HeroSection() {
             style={{ backgroundColor: "rgba(212,165,116,0.1)", color: "#d4a574" }}
           >
             <IconHourglass size={14} />
-            TRAE AI 创造力大赛参赛作品
+            把此刻的心情封存进时间胶囊
           </span>
         </div>
 
@@ -101,17 +101,6 @@ export function HeroSection() {
             </p>
           </div>
         )}
-      </div>
-
-      {/* Scroll hint */}
-      <div
-        className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2"
-        style={{ animation: "bounce-down 2s ease-in-out infinite" }}
-      >
-        <span className="font-sans text-warm-muted/40 text-xs">
-          往下看看
-        </span>
-        <IconArrowDown size={16} color="#a89888" />
       </div>
     </section>
   );

@@ -1,6 +1,14 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32" fill="none">
-  <rect x="2" y="8" width="28" height="20" rx="3" stroke="#d4a574" stroke-width="2" fill="none"/>
-  <path d="M2 10 L16 20 L30 10" stroke="#d4a574" stroke-width="2" fill="none"/>
-  <line x1="2" y1="18" x2="12" y2="26" stroke="#d4a574" stroke-width="1.5" opacity="0.6"/>
-  <line x1="30" y1="18" x2="20" y2="26" stroke="#d4a574" stroke-width="1.5" opacity="0.6"/>
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48" fill="none">
+  <!-- 信封外框:代表"信件/胶囊"容器 -->
+  <rect x="4" y="10" width="40" height="28" rx="3" stroke="#d4a574" stroke-width="2.5" fill="none"/>
+  <!-- 信封翻盖折痕 -->
+  <path d="M5 12.5 L24 26 L43 12.5" stroke="#d4a574" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round" fill="none"/>
+  <!-- 时钟表盘:填充深棕色背景色,形成印章效果,呼应品牌 -->
+  <circle cx="24" cy="32" r="5" stroke="#d4a574" stroke-width="2" fill="#1a1512"/>
+  <!-- 时针(指向10点方向) -->
+  <line x1="24" y1="32" x2="21.8" y2="30.6" stroke="#d4a574" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- 分针(指向2点方向) -->
+  <line x1="24" y1="32" x2="27.5" y2="30" stroke="#d4a574" stroke-width="1.8" stroke-linecap="round"/>
+  <!-- 时钟中心点 -->
+  <circle cx="24" cy="32" r="0.9" fill="#d4a574"/>
 </svg>

@@ -56,7 +56,7 @@ function Countdown({ targetDate }: { targetDate: string }) {
         {blocks.map((block, i) => (
           <div key={i} className="flex items-center gap-2 md:gap-3">
             <div
-              className="w-14 h-16 md:w-16 md:h-20 rounded-lg flex flex-col items-center justify-center"
+              className="w-12 h-14 md:w-16 md:h-20 rounded-lg flex flex-col items-center justify-center"
               style={{ backgroundColor: "rgba(35,30,25,0.8)", border: "1px solid rgba(212,165,116,0.2)" }}
             >
               <span className="font-serif text-amber text-xl md:text-2xl font-bold">
@@ -256,7 +256,7 @@ function CapsuleDetail() {
         {/* Original Letter */}
         <div className="mb-4">
           <div
-            className="relative bg-paper rounded-2xl p-6 md:p-10 letter-lines card-border-transition"
+            className="relative bg-paper rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
             style={{
               boxShadow: "0 4px 24px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.2)",
               border: "1px solid rgba(212,165,116,0.08)",
@@ -264,7 +264,7 @@ function CapsuleDetail() {
             role="article"
             aria-label="原信内容"
           >
-            <div className="flex items-start justify-between mb-6">
+            <div className="flex items-start justify-between mb-6 flex-wrap gap-2">
               <span className="font-sans text-sm text-[#6a5a4a] inline-flex items-center gap-1">
                 <IconMailbox size={14} />
                 {formatDateCN(createDate)} 的我 · {letter.mood}
@@ -300,7 +300,7 @@ function CapsuleDetail() {
         {showReply && (
           <div className="mb-8">
             <div
-              className="relative bg-paper-alt rounded-2xl p-6 md:p-10 letter-lines card-border-transition"
+              className="relative bg-paper-alt rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
               style={{
                 boxShadow: "0 4px 24px rgba(0,0,0,0.3), 0 1px 4px rgba(0,0,0,0.2)",
                 border: "1px solid rgba(212,165,116,0.08)",
@@ -308,7 +308,7 @@ function CapsuleDetail() {
               role="article"
               aria-label="AI 回信内容"
             >
-              <div className="flex items-start justify-between mb-6">
+              <div className="flex items-start justify-between mb-6 flex-wrap gap-2">
                 <span className="font-sans text-sm text-[#6a5a4a] inline-flex items-center gap-1">
                   <IconEnvelope size={14} />
                   {salutation}的你

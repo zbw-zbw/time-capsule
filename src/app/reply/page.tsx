@@ -261,7 +261,7 @@ function ReplyContent() {
         <button
           type="button"
           onClick={handleSkip}
-          className="fixed top-20 right-4 z-30 px-3 py-1.5 rounded-full text-[11px] font-sans text-warm-muted/70 border border-warm-muted/20 hover:border-amber/40 hover:text-amber transition-all"
+          className="fixed top-20 right-4 z-30 px-4 py-2.5 rounded-full text-[11px] font-sans text-warm-muted/70 border border-warm-muted/20 hover:border-amber/40 hover:text-amber transition-all"
           style={{ background: "rgba(26,21,18,0.8)", backdropFilter: "blur(8px)" }}
         >
           <span className="inline-flex items-center gap-1">
@@ -382,7 +382,7 @@ function ReplyContent() {
         {animPhase >= 3 && (
           <div className="mb-8">
             <div
-              className="relative bg-paper-alt rounded-2xl p-6 md:p-10 letter-lines card-border-transition"
+              className="relative bg-paper-alt rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
               style={{
                 boxShadow:
                   "0 1px 2px rgba(0,0,0,0.10), 0 4px 16px rgba(0,0,0,0.25), 0 12px 48px rgba(0,0,0,0.30)",
@@ -483,7 +483,7 @@ function ReplyContent() {
               <div className="mt-4 relative">
                 {/* Original letter card */}
                 <div
-                  className="bg-paper rounded-2xl p-6 md:p-10 letter-lines card-border-transition"
+                  className="bg-paper rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
                   style={{
                     boxShadow: "0 4px 20px rgba(0,0,0,0.25), 0 1px 4px rgba(0,0,0,0.15)",
                     animation: "unfold-letter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards",

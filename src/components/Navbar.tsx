@@ -73,7 +73,7 @@ export function Navbar() {
         <button
           type="button"
           onClick={() => setMenuOpen(!menuOpen)}
-          className="md:hidden text-amber"
+          className="md:hidden text-amber p-2.5 -mr-2.5"
           aria-label="打开菜单"
         >
           {menuOpen ? <IconClose size={24} /> : <IconMenu size={24} />}
@@ -95,7 +95,7 @@ export function Navbar() {
               <button
                 type="button"
                 onClick={() => setMenuOpen(false)}
-                className="text-warm-muted hover:text-amber"
+                className="text-warm-muted hover:text-amber p-2 -mr-2"
                 aria-label="关闭菜单"
               >
                 <IconClose size={20} />

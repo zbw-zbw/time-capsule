@@ -225,7 +225,7 @@ export default function WritePage() {
         />
 
         <div
-          className="relative bg-paper rounded-2xl p-6 md:p-10 letter-lines card-border-transition"
+          className="relative bg-paper rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
           style={{
             boxShadow: "0 8px 40px rgba(0,0,0,0.35), 0 2px 12px rgba(0,0,0,0.25), inset 0 1px 0 rgba(255,255,255,0.4)",
             border: "1px solid rgba(212,165,116,0.08)",
@@ -290,7 +290,7 @@ export default function WritePage() {
             </div>
 
             {/* Postmark stamps */}
-            <div className="flex flex-col items-end gap-1">
+            <div className="flex flex-col items-end gap-1 ml-auto">
               <span
                 className="inline-block px-3 py-1 rounded-full border-2 border-dashed border-[#c4a882]/50 text-[#8a7a6a] text-xs font-sans"
                 style={{ transform: "rotate(-5deg)" }}
@@ -403,7 +403,7 @@ export default function WritePage() {
                   <button
                     type="button"
                     onClick={() => removeWish(i)}
-                    className="text-[#c4a882]/40 hover:text-[#8a3a2a] transition-colors text-sm shrink-0 px-1"
+                    className="text-[#c4a882]/40 hover:text-[#8a3a2a] transition-colors text-sm shrink-0 w-8 h-8 inline-flex items-center justify-center"
                     style={{ background: "transparent", border: "none", cursor: "pointer" }}
                     title="删除"
                     aria-label={`删除愿望 ${i + 1}`}
@@ -442,7 +442,7 @@ export default function WritePage() {
                     key={m.label}
                     type="button"
                     onClick={() => handleMoodSelect(m.label)}
-                    className="px-4 py-2 rounded-full text-sm font-sans inline-flex items-center gap-1.5"
+                    className="px-4 py-2.5 md:py-2 rounded-full text-sm font-sans inline-flex items-center gap-1.5"
                     role="radio"
                     aria-checked={selected}
                     style={{

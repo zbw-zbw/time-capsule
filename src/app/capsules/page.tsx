@@ -121,7 +121,7 @@ function CapsuleCard({
       </div>
 
       {/* Content card - mobile right, desktop half width */}
-      <div className="ml-10 md:ml-0 w-full md:w-[calc(50%-2rem)]">
+      <div className="ml-10 md:ml-0 w-[calc(100%-2.5rem)] md:w-[calc(50%-2rem)]">
         <Link href={`/capsules/${letter.id}`} className="block">
           <div
             className="rounded-xl p-5 md:p-6 card-border-transition active:scale-[0.98]"
@@ -300,7 +300,7 @@ export default function CapsulesPage() {
                   role="tab"
                   aria-selected={active}
                   onClick={() => setFilter(opt.key)}
-                  className="px-4 py-1.5 rounded-full text-xs font-sans transition-all duration-200"
+                  className="px-4 py-2.5 md:py-1.5 rounded-full text-xs font-sans transition-all duration-200"
                   style={{
                     backgroundColor: active
                       ? "rgba(212,165,116,0.2)"
@@ -317,14 +317,6 @@ export default function CapsulesPage() {
 
         {/* Timeline */}
         <div className="relative">
-          {/* Vertical line */}
-          <div
-            className="absolute top-0 bottom-0 w-px left-[14px] md:left-1/2 md:-translate-x-px"
-            style={{
-              background:
-                "linear-gradient(to bottom, rgba(212,165,116,0.2), transparent)",
-            }}
-          />
           {/* Items */}
           <div className="space-y-8 md:space-y-10">
             {filteredLetters.map((letter, i) => (

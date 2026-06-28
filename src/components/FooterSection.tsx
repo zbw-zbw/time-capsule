@@ -40,9 +40,9 @@ export function FooterSection() {
         <div className="fade-in flex flex-col md:flex-row items-center justify-between gap-3 text-warm-muted/50 text-xs font-sans">
           <span>2026 · 06</span>
           <span>
-            《时间胶囊》· TRAE AI 创造力大赛 · 生活娱乐赛道
+            《时间胶囊》· 写给未来的自己
           </span>
-          <span>以 TRAE 之力，写给未来</span>
+          <span>让时间传递温暖</span>
         </div>
       </div>
     </section>

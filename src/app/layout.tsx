@@ -29,7 +29,7 @@ export const metadata: Metadata = {
   title: "时间胶囊 — 给未来的自己写一封信",
   description:
     "AI驱动的情感化时间胶囊。给未来的自己写一封信，让AI帮「未来的你」先回一封。把此刻的愿望和心情封存，等待未来打开的那一天。",
-  keywords: ["时间胶囊", "AI", "给未来的自己写信", "TRAE AI创造力大赛"],
+  keywords: ["时间胶囊", "AI", "给未来的自己写信", "时间信件"],
   authors: [{ name: "Kyrie Wen" }],
   openGraph: {
     title: "时间胶囊 — 给未来的自己写一封信",
