@@ -235,6 +235,7 @@ export default function CapsulesPage() {
 
   const total = letters.length;
   const unopened = letters.filter((l) => l.status !== "opened").length;
+  const openedCount = total - unopened;
 
   const filteredLetters = letters.filter((l) => {
     if (filter === "waiting") return l.status !== "opened";
@@ -281,9 +282,21 @@ export default function CapsulesPage() {
           <p className="font-handwrite text-warm-muted text-base md:text-lg mb-3">
             每一封信都是一颗种子，等待时间让它生长
           </p>
-          <p className="font-sans text-warm-muted/60 text-xs mb-6">
-            共 {total} 封信 · {unopened} 封待开启
-          </p>
+          {/* Stats overview */}
+          <div className="grid grid-cols-3 gap-3 max-w-[400px] mx-auto mb-6">
+            <div className="text-center">
+              <div className="font-serif text-amber text-2xl font-bold">{total}</div>
+              <div className="font-sans text-warm-muted/60 text-[10px] md:text-xs mt-0.5">全部胶囊</div>
+            </div>
+            <div className="text-center">
+              <div className="font-serif text-amber text-2xl font-bold">{openedCount}</div>
+              <div className="font-sans text-warm-muted/60 text-[10px] md:text-xs mt-0.5">已开启</div>
+            </div>
+            <div className="text-center">
+              <div className="font-serif text-amber text-2xl font-bold">{unopened}</div>
+              <div className="font-sans text-warm-muted/60 text-[10px] md:text-xs mt-0.5">待开启</div>
+            </div>
+          </div>
 
           {/* Filter tabs */}
           <div

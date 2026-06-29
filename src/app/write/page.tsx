@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef, useEffect } from "react";
+import React, { useState, useMemo, useCallback, useRef, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   type RecipientTime,
@@ -26,6 +26,41 @@ const MOODS = [
   { label: "有点难过", icon: IconHeartBroken },
   { label: "迷茫", icon: IconMeh },
   { label: "平静", icon: IconLightbulb },
+];
+
+const WRITE_TEMPLATES = [
+  {
+    id: "graduation",
+    label: "毕业寄语",
+    icon: "🎓",
+    content: "亲爱的未来的我，当你读到这封信时，毕业已经过去很久了。此刻我正站在校园里，心中满是不舍和期待。不知道你现在在哪里？做着什么样的工作？是否还记得今天这个夏天？",
+    wishes: ["找到自己热爱的事业", "和重要的朋友保持联系", "保持好奇心和学习热情"],
+    mood: "期待",
+  },
+  {
+    id: "newyear",
+    label: "新年心愿",
+    icon: "🎆",
+    content: "新的一年开始了，我想给自己写点什么。这一年有太多想做的事情，也有太多不确定。但无论如何，我想把此刻的心情记录下来，留给未来的自己。",
+    wishes: ["身体健康，每天运动", "读完 10 本好书", "学会一项新技能"],
+    mood: "充满干劲",
+  },
+  {
+    id: "reflection",
+    label: "深夜独白",
+    icon: "🌙",
+    content: "现在是深夜，周围很安静。有些话不知道该跟谁说，所以写给未来的你。最近想了很多事情，关于生活、关于选择、关于那些还没有答案的问题。",
+    wishes: ["找到内心的平静", "做出不留遗憾的选择", "珍惜身边每一个人"],
+    mood: "迷茫",
+  },
+  {
+    id: "milestone",
+    label: "人生里程碑",
+    icon: "⭐",
+    content: "今天是一个特别的日子，我想记住这一刻的感受。未来的你，当你打开这封信的时候，希望你能微笑着回忆起今天的自己。",
+    wishes: ["勇敢追求想要的生活", "不害怕失败和重新开始", "对每一天都心存感恩"],
+    mood: "平静",
+  },
 ];
 
 const DRAFT_KEY = "time-capsule-draft";
@@ -223,6 +258,36 @@ export default function WritePage() {
         <p className="font-sans text-warm-muted text-xs md:text-sm">
           把此刻的想法封存起来，让 AI 帮&quot;未来的你&quot;先回一封
         </p>
+      </div>
+
+      {/* Quick start templates */}
+      <div className="max-w-[720px] mx-auto mb-6">
+        <div className="flex items-center gap-2 mb-3">
+          <span className="font-sans text-warm-muted/60 text-xs">快速开始：</span>
+        </div>
+        <div className="flex gap-2 overflow-x-auto pb-2 -mx-4 px-4 md:mx-0 md:px-0 scrollbar-hide">
+          {WRITE_TEMPLATES.map((tpl) => (
+            <button
+              key={tpl.id}
+              type="button"
+              onClick={() => {
+                setContent(tpl.content);
+                setWishes([...tpl.wishes, "", ""]);
+                handleMoodSelect(tpl.mood);
+                textareaRef.current?.focus();
+              }}
+              className="flex-shrink-0 px-4 py-2.5 rounded-xl text-xs font-sans transition-all duration-200 hover:bg-amber/10"
+              style={{
+                backgroundColor: "rgba(35,30,25,0.5)",
+                border: "1px solid rgba(212,165,116,0.12)",
+                color: "#a89888",
+                cursor: "pointer",
+              }}
+            >
+              {tpl.label}
+            </button>
+          ))}
+        </div>
       </div>
 
       {/* Letter Paper Card */}
@@ -518,6 +583,44 @@ export default function WritePage() {
               {getMonthYearCN(new Date())}的我
             </p>
           </div>
+        </div>
+      </div>
+
+      {/* Progress indicator */}
+      <div className="max-w-[720px] mx-auto px-4 md:px-6">
+        <div className="flex items-center gap-3 mt-8 mb-4 px-1">
+          {[
+            { done: true, label: "收件人" },
+            { done: content.trim().length >= 10, label: "信件内容" },
+            { done: mood !== "", label: "选择心情" },
+          ].map((step, i) => (
+            <React.Fragment key={step.label}>
+              {i > 0 && (
+                <div
+                  className="flex-1 h-px"
+                  style={{
+                    backgroundColor: step.done ? "rgba(212,165,116,0.4)" : "rgba(168,152,136,0.15)",
+                    transition: "background-color 0.3s ease",
+                  }}
+                />
+              )}
+              <div className="flex items-center gap-1.5">
+                <div
+                  className="w-2 h-2 rounded-full transition-all duration-300"
+                  style={{
+                    backgroundColor: step.done ? "#d4a574" : "rgba(168,152,136,0.3)",
+                    boxShadow: step.done ? "0 0 6px rgba(212,165,116,0.3)" : "none",
+                  }}
+                />
+                <span
+                  className="font-sans text-[10px] md:text-xs transition-colors duration-300"
+                  style={{ color: step.done ? "#d4a574" : "rgba(168,152,136,0.5)" }}
+                >
+                  {step.label}
+                </span>
+              </div>
+            </React.Fragment>
+          ))}
         </div>
       </div>
 

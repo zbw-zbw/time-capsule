@@ -252,6 +252,11 @@ body::before {
   font-weight: 700;
 }
 
+/* ===== Scrollbar Hide ===== */
+
+.scrollbar-hide::-webkit-scrollbar { display: none; }
+.scrollbar-hide { -ms-overflow-style: none; scrollbar-width: none; }
+
 /* ===== Reduced Motion ===== */
 
 @media (prefers-reduced-motion: reduce) {
