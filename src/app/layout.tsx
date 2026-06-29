@@ -3,6 +3,7 @@ import { Long_Cang, Noto_Serif_SC, Inter } from "next/font/google";
 import "./globals.css";
 import { Navbar } from "@/components/Navbar";
 import { ScrollObserver } from "@/components/ScrollObserver";
+import { ToastProvider } from "@/components/Toast";
 
 const longCang = Long_Cang({
   weight: "400",
@@ -56,9 +57,11 @@ export default function RootLayout({
       className={`${longCang.variable} ${notoSerifSC.variable} ${inter.variable} antialiased`}
     >
       <body className="min-h-screen font-sans">
-        <Navbar />
-        <ScrollObserver />
-        <main className="relative z-[1]">{children}</main>
+        <ToastProvider>
+          <Navbar />
+          <ScrollObserver />
+          <main className="relative z-[1]">{children}</main>
+        </ToastProvider>
       </body>
     </html>
   );

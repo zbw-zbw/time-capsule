@@ -169,6 +169,12 @@ body::before {
   50% { box-shadow: 0 0 0 10px rgba(212, 165, 116, 0); }
 }
 
+@keyframes open-capsule-reveal {
+  0% { opacity: 0; transform: scaleY(0.8) translateY(20px); }
+  50% { opacity: 1; transform: scaleY(1.02) translateY(-2px); }
+  100% { opacity: 1; transform: scaleY(1) translateY(0); }
+}
+
 /* ===== Intersection Observer Fade-in ===== */
 
 .fade-in {

@@ -14,6 +14,7 @@ import {
   setDemoMode,
 } from "@/lib/storage";
 import { SealAnimation } from "@/components/SealAnimation";
+import { useToast } from "@/components/Toast";
 import { IconPen, IconEnvelope, IconSmile, IconFrown, IconZap, IconHeartBroken, IconMeh, IconLightbulb, IconWarning } from "@/components/Icons";
 
 const RECIPIENT_OPTIONS: RecipientTime[] = ["1年后", "6个月后", "3年后", "5年后"];
@@ -63,6 +64,7 @@ function hasContent(draft: DraftData): boolean {
 
 export default function WritePage() {
   const router = useRouter();
+  const toast = useToast();
 
   // Load draft on mount
   const [recipient, setRecipient] = useState<RecipientTime>("1年后");
@@ -77,6 +79,9 @@ export default function WritePage() {
       setContent(draft.content);
       setWishes(draft.wishes.length > 0 ? draft.wishes : ["", "", ""]);
       setMood(draft.mood);
+      if (hasContent(draft)) {
+        toast.info("已恢复上次未完成的草稿");
+      }
     }
   }, []);
 

@@ -245,20 +245,23 @@ export default function CapsulesPage() {
   // Empty state
   if (total === 0) {
     return (
-      <div className="min-h-screen flex flex-col items-center justify-center px-6 pt-20">
+      <div className="min-h-screen flex flex-col items-center justify-center px-6 pt-20" style={{ animation: "fade-in-up 0.8s cubic-bezier(0.22, 1, 0.36, 1) forwards" }}>
         <div className="text-center">
-          <EmptyEnvelopeIcon />
-          <h1 className="font-serif font-bold text-amber text-2xl md:text-3xl mb-3">
+          <svg width="80" height="60" viewBox="0 0 80 60" fill="none" className="text-amber/30 mx-auto">
+            <rect x="3" y="3" width="74" height="54" rx="4" stroke="currentColor" strokeWidth="2" fill="none"/>
+            <path d="M3 8L40 32L77 8" stroke="currentColor" strokeWidth="2" stroke-linejoin="round" fill="none"/>
+            <path d="M25 30L40 38L55 30" stroke="currentColor" strokeWidth="1.5" stroke-dasharray="4 3" fill="none" opacity="0.6"/>
+          </svg>
+          <h1 className="font-serif font-bold text-amber text-xl mt-6 mb-3">
             还没有时间胶囊
           </h1>
           <p className="font-sans text-warm-muted text-sm mb-8 max-w-xs mx-auto leading-relaxed">
-            写一封信给未来的自己吧，AI 会帮&quot;未来的你&quot;先回一封
+            写一封信给未来的自己，封存此刻的心情与愿望
           </p>
           <Link
             href="/write"
-            className="inline-flex items-center gap-2 px-8 py-3.5 bg-amber text-bg-deep font-sans font-semibold text-sm rounded-full hover:bg-amber-light transition-all duration-300 btn-lift"
+            className="inline-flex items-center gap-2 px-6 py-2.5 rounded-full bg-amber text-[#1a1512] font-sans text-sm font-medium hover:bg-amber/90 transition-all btn-lift"
           >
-            <IconPen size={16} />
             写第一封信
           </Link>
         </div>

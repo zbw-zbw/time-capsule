@@ -24,6 +24,7 @@ import {
   IconFastForward,
   IconClock,
 } from "@/components/Icons";
+import { useToast } from "@/components/Toast";
 
 const REPLY_PROGRESS_KEY = (id: string) => `tc-reply-progress-${id}`;
 
@@ -31,6 +32,7 @@ function ReplyContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   const letterId = searchParams.get("id");
+  const toast = useToast();
 
   const [letter, setLetter] = useState<TimeCapsuleLetter | null>(null);
   const [replyText, setReplyText] = useState("");
@@ -211,10 +213,11 @@ function ReplyContent() {
     if (!letter || !fullTextRef.current) return;
     updateLetterReply(letter.id, fullTextRef.current);
     setSaved(true);
+    toast.success("已保存到我的胶囊");
     if (typeof window !== "undefined") {
       localStorage.removeItem(REPLY_PROGRESS_KEY(letter.id));
     }
-  }, [letter]);
+  }, [letter, toast]);
 
   const handleRetry = useCallback(() => {
     setReplyText("");

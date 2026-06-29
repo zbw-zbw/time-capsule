@@ -25,6 +25,7 @@ import {
   IconInbox,
 } from "@/components/Icons";
 import { Countdown } from "@/components/Countdown";
+import { useToast } from "@/components/Toast";
 
 function DeleteModal({
   onConfirm,
@@ -81,9 +82,11 @@ function CapsuleDetail() {
   const params = useParams();
   const router = useRouter();
   const letterId = params.id as string;
+  const toast = useToast();
 
   const [letter, setLetter] = useState<TimeCapsuleLetter | null>(null);
   const [opened, setOpened] = useState(false);
+  const [opening, setOpening] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
 
@@ -112,13 +115,25 @@ function CapsuleDetail() {
 
   const handleDelete = useCallback(() => {
     deleteLetter(letterId);
+    toast.info("胶囊已删除");
     router.push("/capsules");
-  }, [letterId, router]);
+  }, [letterId, router, toast]);
 
   const handleOpen = useCallback(() => {
     openLetter(letterId);
     setOpened(true);
-  }, [letterId]);
+    toast.success("胶囊已开启，时光信件解封成功");
+  }, [letterId, toast]);
+
+  useEffect(() => {
+    if (!opening) return;
+    openLetter(letterId);
+    const timer = setTimeout(() => {
+      setOpened(true);
+      setOpening(false);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [opening, letterId]);
 
   if (!mounted) {
     return (
@@ -208,7 +223,7 @@ function CapsuleDetail() {
         </div>
 
         {/* Countdown / Open action */}
-        {!opened && (
+        {!opened && !opening && (
           <div className="mb-8 text-center">
             <Countdown targetDate={letter.openAt} size="lg" />
             <p className="mt-3 font-sans text-warm-muted text-xs">
@@ -217,7 +232,8 @@ function CapsuleDetail() {
             {openable && (
               <button
                 onClick={handleOpen}
-                className="mt-6 px-6 py-2.5 rounded-full bg-amber text-[#1a1512] font-sans text-sm font-medium hover:bg-amber/90 transition-all"
+                disabled={opening}
+                className="mt-6 px-6 py-2.5 rounded-full bg-amber text-[#1a1512] font-sans text-sm font-medium hover:bg-amber/90 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
                 style={{ animation: "pulse-glow 2s ease-in-out infinite" }}
               >
                 开启胶囊
@@ -226,8 +242,22 @@ function CapsuleDetail() {
           </div>
         )}
 
+        {/* Opening animation overlay */}
+        {opening && (
+          <div className="mb-8 text-center" style={{ animation: "open-capsule-reveal 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards" }}>
+            <div className="inline-block relative mx-auto" style={{ width: 80, height: 60 }}>
+              <svg width="80" height="60" viewBox="0 0 80 60" fill="none" className="text-amber">
+                <rect x="3" y="3" width="74" height="54" rx="4" stroke="currentColor" strokeWidth="2" fill="none" className="animate-pulse" style={{ animationDuration: "2s" }}/>
+                <path d="M3 8L40 32L77 8" stroke="currentColor" strokeWidth="2" strokeLinejoin="round" fill="none"/>
+                <path d="M20 20L40 35L60 20" stroke="currentColor" strokeWidth="1.5" fill="none" opacity="0.3" strokeDasharray="4 3"/>
+              </svg>
+            </div>
+            <p className="mt-4 font-handwrite text-amber text-lg">时光信件正在解封...</p>
+          </div>
+        )}
+
         {/* Original Letter */}
-        {opened && (
+        {opened && !opening && (
         <div className="mb-4">
           <div
             className="relative bg-paper rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
@@ -272,7 +302,7 @@ function CapsuleDetail() {
         )}
 
         {/* AI Reply */}
-        {opened && showReply && (
+        {opened && !opening && showReply && (
           <div className="mb-8">
             <div
               className="relative bg-paper-alt rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
