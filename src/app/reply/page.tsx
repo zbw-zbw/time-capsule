@@ -362,21 +362,21 @@ function ReplyContent() {
                 </div>
               </div>
 
-              {/* Paper sliding out - rises from inside envelope with bounce */}
-              {animPhase >= 2 && (
-                <div
-                  className="absolute left-4 right-4 rounded-lg"
-                  style={{
-                    background: "#f0e8db",
-                    height: "120px",
-                    top: "-80px",
-                    opacity: 1,
-                    boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
-                    animation: "paper-rise 1s cubic-bezier(0.22, 1, 0.36, 1) forwards",
-                    animationDelay: "0.8s",
-                  }}
-                />
-              )}
+              {/* Paper sliding out - always rendered, starts inside envelope */}
+              <div
+                className="absolute left-4 right-4 rounded-lg"
+                style={{
+                  background: "#f0e8db",
+                  height: "120px",
+                  top: animPhase >= 2 ? "-80px" : "20px",
+                  opacity: animPhase >= 2 ? 1 : 0,
+                  boxShadow: "0 4px 16px rgba(0,0,0,0.2)",
+                  transition: "top 1s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.4s cubic-bezier(0.22, 1, 0.36, 1)",
+                  transitionDelay: animPhase >= 2 ? "0.8s, 0.6s" : "0s, 0s",
+                  zIndex: animPhase >= 2 ? 10 : 0,
+                  pointerEvents: "none",
+                }}
+              />
             </div>
           </div>
         )}

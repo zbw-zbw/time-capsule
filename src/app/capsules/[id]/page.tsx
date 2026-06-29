@@ -106,6 +106,10 @@ function CapsuleDetail() {
           // ignore errors
         }
       }
+      // Auto-open capsules created before future-open feature (status is replied but not opened)
+      if (found.status === "replied") {
+        found.status = "opened";
+      }
       setOpened(found.status === "opened");
       setLetter(found);
     } else {

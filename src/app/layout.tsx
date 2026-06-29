@@ -10,6 +10,7 @@ const longCang = Long_Cang({
   variable: "--font-long-cang",
   subsets: ["latin"],
   display: "swap",
+  preload: true,
 });
 
 const notoSerifSC = Noto_Serif_SC({
