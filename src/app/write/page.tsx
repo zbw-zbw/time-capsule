@@ -15,7 +15,7 @@ import {
 } from "@/lib/storage";
 import { SealAnimation } from "@/components/SealAnimation";
 import { useToast } from "@/components/Toast";
-import { IconPen, IconEnvelope, IconSmile, IconFrown, IconZap, IconHeartBroken, IconMeh, IconLightbulb, IconWarning } from "@/components/Icons";
+import { IconPen, IconEnvelope, IconSmile, IconFrown, IconZap, IconHeartBroken, IconMeh, IconLightbulb, IconWarning, IconClock } from "@/components/Icons";
 
 const RECIPIENT_OPTIONS: RecipientTime[] = ["1年后", "6个月后", "3年后", "5年后"];
 
@@ -176,6 +176,7 @@ export default function WritePage() {
   const [focusedWishIndex, setFocusedWishIndex] = useState<number | null>(null);
   const [moodAnimKey, setMoodAnimKey] = useState<string | null>(null);
   const [demoMode, setDemoModeLocal] = useState(false);
+  const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const draftRef = useRef<DraftData>({ recipient: "1年后", content: "", wishes: ["", "", ""], mood: "" });
 
@@ -217,6 +218,7 @@ export default function WritePage() {
   // Auto-resize textarea (smooth, no jump)
   const handleContentChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setContent(e.target.value);
+    setActiveTemplateId(null);
     if (errors.content) setErrors((prev) => ({ ...prev, content: undefined }));
     const el = e.target;
     requestAnimationFrame(() => {
@@ -322,13 +324,14 @@ export default function WritePage() {
                 setContent(tpl.content);
                 setWishes([...tpl.wishes, "", ""]);
                 handleMoodSelect(tpl.mood);
+                setActiveTemplateId(tpl.id);
                 textareaRef.current?.focus();
               }}
-              className="flex-shrink-0 px-4 py-2.5 rounded-xl text-xs font-sans transition-all duration-200 hover:bg-amber/10"
+              className={`flex-shrink-0 px-4 py-2.5 rounded-xl text-xs font-sans transition-all duration-200 ${activeTemplateId === tpl.id ? 'bg-amber/15 border-amber/30 text-amber' : 'hover:bg-amber/10'}`}
               style={{
-                backgroundColor: "rgba(35,30,25,0.5)",
-                border: "1px solid rgba(212,165,116,0.12)",
-                color: "#a89888",
+                backgroundColor: activeTemplateId === tpl.id ? "rgba(212,165,116,0.15)" : "rgba(35,30,25,0.5)",
+                border: `1px solid ${activeTemplateId === tpl.id ? "rgba(212,165,116,0.3)" : "rgba(212,165,116,0.12)"}`,
+                color: activeTemplateId === tpl.id ? "#d4a574" : "#a89888",
                 cursor: "pointer",
               }}
             >
@@ -400,11 +403,12 @@ export default function WritePage() {
                           setRecipient(opt);
                           setShowDropdown(false);
                         }}
-                        className="block w-full text-left px-4 py-2.5 font-handwrite text-[#2a2420] text-base hover:bg-[rgba(212,165,116,0.1)] transition-colors"
+                        className="block w-full text-left px-4 py-2.5 font-handwrite text-[#2a2420] text-base hover:bg-[rgba(212,165,116,0.1)] transition-colors inline-flex items-center gap-2"
                         style={{ background: "transparent", border: "none", cursor: "pointer" }}
                         role="option"
                         aria-selected={recipient === opt}
                       >
+                        <IconClock size={14} color="#a89888" />
                         {opt}
                       </button>
                     ))}

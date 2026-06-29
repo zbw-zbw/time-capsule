@@ -21,6 +21,7 @@ import {
   IconSave,
   IconPen,
   IconHome,
+  IconMailbox,
   IconFastForward,
   IconClock,
 } from "@/components/Icons";
@@ -520,6 +521,15 @@ function ReplyContent() {
           </div>
         )}
 
+        {/* Reply complete divider */}
+        {isDone && !error && (
+          <div className="flex items-center gap-4 my-6">
+            <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(212,165,116,0.2), transparent)" }} />
+            <span className="font-sans text-warm-muted/40 text-[10px] tracking-widest uppercase">回信结束</span>
+            <div className="flex-1 h-px" style={{ background: "linear-gradient(to right, transparent, rgba(212,165,116,0.2), transparent)" }} />
+          </div>
+        )}
+
         {/* Action Buttons */}
         {isDone && !error && (
           <div
@@ -569,11 +579,11 @@ function ReplyContent() {
                 再写一封
               </Link>
               <Link
-                href="/"
+                href="/capsules"
                 className="w-full sm:w-auto px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift inline-flex items-center justify-center gap-1.5"
               >
-                <IconHome size={14} />
-                回到首页
+                <IconMailbox size={14} />
+                查看我的胶囊
               </Link>
             </div>
           </div>

@@ -246,6 +246,25 @@ function CapsuleDetail() {
           </div>
         )}
 
+        {/* Sealed state - letter preview hint */}
+        {!opened && !opening && (
+          <div className="text-center mb-8 fade-in">
+            <div className="inline-block p-6 rounded-2xl" style={{ backgroundColor: "rgba(35,30,25,0.4)", border: "1px solid rgba(212,165,116,0.08)" }}>
+              <div className="flex items-center justify-center gap-2 mb-3">
+                <div className="w-2 h-2 rounded-full bg-amber/60" style={{ animation: "pulse-glow 2s ease-in-out infinite" }} />
+                <span className="font-sans text-warm-muted/50 text-xs">信件已安全封存</span>
+                <div className="w-2 h-2 rounded-full bg-amber/60" style={{ animation: "pulse-glow 2s ease-in-out infinite" }} />
+              </div>
+              <p className="font-handwrite text-warm-muted/40 text-sm mb-2 line-clamp-2 max-w-[400px]">
+                {letter.content.slice(0, 60)}...
+              </p>
+              <p className="font-sans text-warm-muted/30 text-[10px]">
+                内容预览 · 开启后查看完整信件
+              </p>
+            </div>
+          </div>
+        )}
+
         {/* Opening animation overlay */}
         {opening && (
           <div className="mb-8 text-center" style={{ animation: "open-capsule-reveal 1.5s cubic-bezier(0.22, 1, 0.36, 1) forwards" }}>

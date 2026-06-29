@@ -82,15 +82,15 @@ export function HeroSection() {
             </span>
           </Link>
 
-          <Link
-            href="/capsules"
-            className="w-full sm:w-auto px-8 py-4 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all duration-300 btn-lift"
-          >
-            <span className="flex items-center justify-center gap-2">
-              <IconMailbox size={16} />
+          {capsuleCount > 0 && (
+            <Link
+              href="/capsules"
+              className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full font-sans text-sm text-amber/80 hover:text-amber border border-amber/20 hover:border-amber/40 transition-all duration-300 btn-lift"
+            >
+              <IconMailbox size={16} color="#d4a574" />
               查看我的胶囊
-            </span>
-          </Link>
+            </Link>
+          )}
         </div>
 
         {/* Capsule count hint */}
