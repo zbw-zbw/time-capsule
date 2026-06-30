@@ -225,6 +225,43 @@ export default function CapsulesPage() {
     setLetters(getLetters());
   }, []);
 
+  // Request notification permission
+  useEffect(() => {
+    if (typeof window !== "undefined" && "Notification" in window && Notification.permission === "default") {
+      Notification.requestPermission();
+    }
+  }, []);
+
+  // Check for openable capsules and notify
+  useEffect(() => {
+    if (!mounted || typeof window === "undefined" || !("Notification" in window) || Notification.permission !== "granted") return;
+    
+    const notifiedKey = "time-capsule-notified";
+    const notifiedSet = new Set<string>();
+    try {
+      const notified = localStorage.getItem(notifiedKey);
+      if (notified) JSON.parse(notified).forEach((id: string) => notifiedSet.add(id));
+    } catch {}
+    
+    const check = () => {
+      const allLetters = getLetters();
+      allLetters.forEach((l) => {
+        if (!notifiedSet.has(l.id) && isLetterOpenable(l) && l.status !== "opened") {
+          new Notification("时间胶囊已可开启", {
+            body: `你写给「${l.recipientTime}后的自己」的信已到达`,
+            icon: "/icon.svg",
+          });
+          notifiedSet.add(l.id);
+          localStorage.setItem(notifiedKey, JSON.stringify([...notifiedSet]));
+        }
+      });
+    };
+    
+    check();
+    const timer = setInterval(check, 60000); // Check every minute
+    return () => clearInterval(timer);
+  }, [mounted]);
+
   if (!mounted) {
     return (
       <div className="min-h-screen flex items-center justify-center pt-20">

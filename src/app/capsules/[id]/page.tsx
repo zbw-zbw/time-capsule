@@ -26,6 +26,7 @@ import {
 } from "@/components/Icons";
 import { Countdown } from "@/components/Countdown";
 import { useToast } from "@/components/Toast";
+import { ShareCard } from "@/components/ShareCard";
 
 function DeleteModal({
   onConfirm,
@@ -86,6 +87,7 @@ function CapsuleDetail() {
 
   const [letter, setLetter] = useState<TimeCapsuleLetter | null>(null);
   const [opened, setOpened] = useState(false);
+  const [viewMode, setViewMode] = useState<"stacked" | "compare">("stacked");
   const [opening, setOpening] = useState(false);
   const [mounted, setMounted] = useState(false);
   const [showDelete, setShowDelete] = useState(false);
@@ -279,8 +281,8 @@ function CapsuleDetail() {
           </div>
         )}
 
-        {/* Original Letter */}
-        {opened && !opening && (
+        {/* Original Letter - stacked mode */}
+        {opened && !opening && viewMode === "stacked" && (
         <div className="mb-4" style={{ animation: "unfold-letter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards" }}>
           <div
             className="relative bg-paper rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
@@ -324,8 +326,40 @@ function CapsuleDetail() {
         </div>
         )}
 
-        {/* AI Reply */}
+        {/* View mode toggle - only when both original and AI reply exist */}
         {opened && !opening && showReply && (
+          <div className="flex items-center justify-center gap-1 mb-6 mt-2">
+            <button
+              type="button"
+              onClick={() => setViewMode("stacked")}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-sans transition-all`}
+              style={{
+                backgroundColor: viewMode === "stacked" ? "rgba(212,165,116,0.15)" : "transparent",
+                color: viewMode === "stacked" ? "#d4a574" : "#a89888",
+                border: viewMode === "stacked" ? "1px solid rgba(212,165,116,0.3)" : "1px solid rgba(212,165,116,0.08)",
+                cursor: "pointer",
+              }}
+            >
+              顺序阅读
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode("compare")}
+              className={`px-3 py-1.5 rounded-full text-[11px] font-sans transition-all`}
+              style={{
+                backgroundColor: viewMode === "compare" ? "rgba(212,165,116,0.15)" : "transparent",
+                color: viewMode === "compare" ? "#d4a574" : "#a89888",
+                border: viewMode === "compare" ? "1px solid rgba(212,165,116,0.3)" : "1px solid rgba(212,165,116,0.08)",
+                cursor: "pointer",
+              }}
+            >
+              时光对比
+            </button>
+          </div>
+        )}
+
+        {/* AI Reply - stacked mode */}
+        {opened && !opening && showReply && viewMode === "stacked" && (
           <div className="mb-8" style={{ animation: "unfold-letter 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both" }}>
             <div
               className="relative bg-paper-alt rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
@@ -366,6 +400,60 @@ function CapsuleDetail() {
           </div>
         )}
 
+        {/* Compare mode - side by side */}
+        {opened && !opening && showReply && viewMode === "compare" && (
+          <div className="mb-8" style={{ animation: "unfold-letter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards" }}>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6 relative">
+              {/* Time bridge indicator */}
+              <div className="hidden md:flex absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-10">
+                <div className="flex flex-col items-center gap-1">
+                  <div className="w-8 h-px" style={{ background: "rgba(212,165,116,0.3)" }} />
+                  <div className="px-2 py-1 rounded-full text-[9px] font-sans text-amber bg-bg-deep/80" style={{ border: "1px solid rgba(212,165,116,0.2)" }}>
+                    {Math.floor((openDate.getTime() - createDate.getTime()) / (1000 * 60 * 60 * 24))} 天
+                  </div>
+                  <div className="w-8 h-px" style={{ background: "rgba(212,165,116,0.3)" }} />
+                </div>
+              </div>
+              {/* Original letter card */}
+              <div className="relative bg-paper rounded-2xl p-4 md:p-6 letter-lines" style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.3)", border: "1px solid rgba(212,165,116,0.08)" }}>
+                <div className="flex items-center gap-1 mb-3">
+                  <IconMailbox size={12} />
+                  <span className="font-sans text-[#6a5a4a] text-xs">{formatDateCN(createDate)} 的我</span>
+                </div>
+                <div className="markdown-body font-handwrite text-[#2a2420] text-sm md:text-base leading-[28px] md:leading-[30px] max-h-[400px] overflow-y-auto">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{letter.content || ""}</ReactMarkdown>
+                </div>
+                {letter.wishes.length > 0 && (
+                  <div className="mt-3 pt-3" style={{ borderTop: "1px dashed rgba(200,100,100,0.2)" }}>
+                    <p className="font-handwrite text-[#2a2420] text-sm mb-1">我希望那时的你：</p>
+                    {letter.wishes.map((w, i) => (
+                      <p key={i} className="font-handwrite text-[#2a2420] text-sm ml-3">{i + 1}. {w}</p>
+                    ))}
+                  </div>
+                )}
+              </div>
+              {/* AI Reply card */}
+              <div className="relative bg-paper-alt rounded-2xl p-4 md:p-6 letter-lines" style={{ boxShadow: "0 4px 24px rgba(0,0,0,0.3)", border: "1px solid rgba(212,165,116,0.08)" }}>
+                <div className="flex items-center gap-1 mb-3">
+                  <IconRobot size={12} />
+                  <span className="font-sans text-[#6a5a4a] text-xs">{salutation}后的你 · AI 生成</span>
+                </div>
+                <div className="markdown-body font-handwrite text-[#2a2420] text-sm md:text-base leading-[28px] md:leading-[30px] max-h-[400px] overflow-y-auto">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{letter.aiReply || ""}</ReactMarkdown>
+                </div>
+              </div>
+            </div>
+            {/* Mobile time bridge */}
+            <div className="flex md:hidden items-center justify-center gap-2 my-3">
+              <div className="flex-1 h-px" style={{ background: "rgba(212,165,116,0.2)" }} />
+              <span className="font-sans text-amber/60 text-[10px]">
+                跨越 {Math.floor((openDate.getTime() - createDate.getTime()) / (1000 * 60 * 60 * 24))} 天
+              </span>
+              <div className="flex-1 h-px" style={{ background: "rgba(212,165,116,0.2)" }} />
+            </div>
+          </div>
+        )}
+
         {/* Actions */}
         <div className="flex flex-col sm:flex-row items-center gap-3 justify-center mt-8">
           <Link
@@ -375,6 +463,13 @@ function CapsuleDetail() {
             <IconPen size={14} />
             再写一封
           </Link>
+          <ShareCard
+            recipientTime={letter.recipientTime}
+            createdAt={formatDateCN(createDate)}
+            openAt={formatDateCN(openDate)}
+            mood={letter.mood}
+            contentPreview={letter.content}
+          />
           <button
             type="button"
             onClick={() => setShowDelete(true)}
