@@ -94,16 +94,14 @@ export function SealAnimation({ letterId, letterPreview, onComplete }: SealAnima
 
         {/* Step 2: Envelope */}
         <div
-          className="absolute transition-all duration-1000"
+          className="relative transition-all duration-1000 mt-4"
           style={{
             transform:
               step < 1
-                ? "translateY(120%)"
-                : step === 1
-                ? "translateY(0)"
-                : step >= 2
-                ? "translateY(0)"
-                : "translateY(120%)",
+                ? "translateY(60px) scale(0.8)"
+                : step >= 1
+                ? "translateY(0) scale(1)"
+                : "translateY(60px) scale(0.8)",
             opacity: step >= 1 ? 1 : 0,
             transitionTimingFunction: "cubic-bezier(0.22, 1, 0.36, 1)",
           }}
@@ -218,7 +216,7 @@ export function SealAnimation({ letterId, letterPreview, onComplete }: SealAnima
 
         {/* Step 4: Success text */}
         <div
-          className="absolute bottom-16 left-0 right-0 text-center transition-all duration-700"
+          className="text-center transition-all duration-700 mt-6"
           style={{
             opacity: step >= 4 ? 1 : 0,
             transform: step >= 4 ? "translateY(0)" : "translateY(20px)",

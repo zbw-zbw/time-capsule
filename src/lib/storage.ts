@@ -1,4 +1,4 @@
-export type RecipientTime = "1年后" | "6个月后" | "3年后" | "5年后";
+export type RecipientTime = "3天后" | "7天后" | "30天后" | "6个月后" | "1年后" | "3年后" | "5年后";
 export type LetterStatus = "draft" | "sealed" | "replied" | "opened";
 export type Mood = "期待" | "焦虑" | "充满干劲" | "有点难过" | "迷茫" | "平静";
 
@@ -36,6 +36,15 @@ export function calculateOpenDate(recipientTime: RecipientTime, demoMode = false
     return result;
   }
   switch (recipientTime) {
+    case "3天后":
+      result.setDate(result.getDate() + 3);
+      break;
+    case "7天后":
+      result.setDate(result.getDate() + 7);
+      break;
+    case "30天后":
+      result.setDate(result.getDate() + 30);
+      break;
     case "6个月后":
       result.setMonth(result.getMonth() + 6);
       break;
@@ -54,6 +63,10 @@ export function calculateOpenDate(recipientTime: RecipientTime, demoMode = false
 
 export function getSalutation(recipientTime: RecipientTime): string {
   switch (recipientTime) {
+    case "3天后":
+    case "7天后":
+    case "30天后":
+      return "几天后";
     case "6个月后": return "半年后";
     case "1年后": return "一年后";
     case "3年后": return "三年后";

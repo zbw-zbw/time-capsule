@@ -17,7 +17,15 @@ import { SealAnimation } from "@/components/SealAnimation";
 import { useToast } from "@/components/Toast";
 import { IconPen, IconEnvelope, IconSmile, IconFrown, IconZap, IconHeartBroken, IconMeh, IconLightbulb, IconWarning, IconClock } from "@/components/Icons";
 
-const RECIPIENT_OPTIONS: RecipientTime[] = ["1年后", "6个月后", "3年后", "5年后"];
+const RECIPIENT_OPTIONS: RecipientTime[] = [
+  "3天后",
+  "7天后",
+  "30天后",
+  "6个月后",
+  "1年后",
+  "3年后",
+  "5年后",
+];
 
 const MOODS = [
   { label: "期待", icon: IconSmile },
@@ -685,38 +693,37 @@ export default function WritePage() {
         </div>
       </div>
 
-      {/* Bottom Action Bar */}
-      <div className="max-w-[720px] mx-auto mt-8 text-center">
+      {/* Bottom Action Bar - Fixed */}
+      <div className="fixed bottom-6 right-6 z-[50]">
         <button
           type="button"
           onClick={handleSubmit}
-          disabled={isSubmitting}
-          className="inline-block w-full max-w-[320px] px-8 py-4 bg-amber text-bg-deep font-sans font-semibold text-sm rounded-xl btn-lift disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none"
+          disabled={isSubmitting || content.trim().length < 10 || mood === ""}
+          className="inline-flex items-center justify-center gap-2 px-6 py-3 bg-amber text-bg-deep font-sans font-semibold text-sm rounded-full shadow-lg btn-lift disabled:opacity-40 disabled:cursor-not-allowed disabled:transform-none transition-all duration-300"
           style={{
-            boxShadow: "0 0 0 rgba(212,165,116,0)",
+            boxShadow: "0 4px 24px rgba(212,165,116,0.3), 0 1px 4px rgba(0,0,0,0.2)",
           }}
           onMouseEnter={(e) => {
             if (!isSubmitting) {
-              e.currentTarget.style.boxShadow = "0 8px 32px rgba(212,165,116,0.3)";
+              e.currentTarget.style.boxShadow = "0 8px 32px rgba(212,165,116,0.5), 0 2px 8px rgba(0,0,0,0.3)";
+              e.currentTarget.style.transform = "translateY(-2px)";
             }
           }}
           onMouseLeave={(e) => {
-            e.currentTarget.style.boxShadow = "0 0 0 rgba(212,165,116,0)";
+            e.currentTarget.style.boxShadow = "0 4px 24px rgba(212,165,116,0.3), 0 1px 4px rgba(0,0,0,0.2)";
+            e.currentTarget.style.transform = "translateY(0)";
           }}
           aria-label="封存信件"
         >
           {isSubmitting ? (
-            "正在封存..."
+            "封存中..."
           ) : (
-            <span className="inline-flex items-center justify-center gap-2">
-              封存信件，等待回信
+            <>
               <IconEnvelope size={16} color="#1a1512" />
-            </span>
+              封存信件
+            </>
           )}
         </button>
-        <p className="font-sans text-warm-muted text-xs mt-3">
-          信件将被封存，AI 将以&quot;未来的你&quot;的身份回信
-        </p>
       </div>
     </div>
   );
