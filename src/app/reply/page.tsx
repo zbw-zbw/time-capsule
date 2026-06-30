@@ -424,13 +424,13 @@ function ReplyContent() {
                 aria-label="AI 回信内容"
               >
                 {isDone || letter.aiReply ? (
-                  <div className="markdown-body">
+                  <div className="markdown-body" style={{ animation: "fade-in-content 0.5s ease forwards" }}>
                     <ReactMarkdown remarkPlugins={[remarkGfm]}>
                       {replyText || letter.aiReply || ""}
                     </ReactMarkdown>
                   </div>
                 ) : (
-                  <div className="whitespace-pre-wrap">
+                  <div className="whitespace-pre-wrap markdown-body">
                     {replyText}
                     {/* Blinking cursor */}
                     {isGenerating && !isDone && (
@@ -518,6 +518,14 @@ function ReplyContent() {
                 </div>
               </div>
             )}
+          </div>
+        )}
+
+        {/* Typing complete indicator */}
+        {isDone && !error && (
+          <div className="flex items-center justify-center gap-2 mt-4 fade-in">
+            <IconCheck size={14} color="#d4a574" />
+            <span className="font-sans text-amber/60 text-xs">回信已完成</span>
           </div>
         )}
 

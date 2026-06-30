@@ -220,11 +220,10 @@ export default function WritePage() {
     setContent(e.target.value);
     setActiveTemplateId(null);
     if (errors.content) setErrors((prev) => ({ ...prev, content: undefined }));
+    // Auto-resize textarea
     const el = e.target;
-    requestAnimationFrame(() => {
-      el.style.height = "auto";
-      el.style.height = Math.max(200, el.scrollHeight) + "px";
-    });
+    el.style.height = "auto";
+    el.style.height = Math.min(el.scrollHeight, 500) + "px";
   };
 
   // Wishes handlers
@@ -473,7 +472,7 @@ export default function WritePage() {
           </div>
 
           {/* 3. Letter Content */}
-          <div className="mb-6 relative">
+          <div className="mb-8">
             <textarea
               ref={textareaRef}
               value={content}
@@ -506,25 +505,35 @@ export default function WritePage() {
                 {errors.content}
               </p>
             )}
-            {/* Character count */}
-            <p
-              className="font-sans text-xs text-right mt-1 absolute -bottom-5 right-0 flex items-center gap-1"
-              style={{ color: contentLength < 10 && contentLength > 0 ? "#c46a4a" : isOverLimit ? "#d4a574" : "#a89888" }}
-              aria-live="polite"
-            >
-              {contentLength < 10 && contentLength > 0 && (
-                <span className="inline-flex items-center gap-0.5">
-                  <IconWarning size={12} color="#c46a4a" />
-                  至少 10 字
-                </span>
-              )}
-              已写 {contentLength} 字
-              {contentLength >= 10 && contentLength < 20 && "（可以提交了）"}
-            </p>
+            {/* Character count with progress bar */}
+            <div className="mt-2 flex items-center gap-2 justify-end">
+              <div className="w-24 h-1 rounded-full overflow-hidden" style={{ backgroundColor: "rgba(168,152,136,0.15)" }}>
+                <div
+                  className="h-full rounded-full transition-all duration-300"
+                  style={{
+                    width: `${Math.min(contentLength / 500 * 100, 100)}%`,
+                    backgroundColor: contentLength < 10 ? "#c46a4a" : contentLength > 450 ? "#d4a574" : "#d4a574",
+                  }}
+                />
+              </div>
+              <p
+                className="font-sans text-[10px] flex items-center gap-1"
+                style={{ color: contentLength < 10 && contentLength > 0 ? "#c46a4a" : isOverLimit ? "#d4a574" : "#a89888" }}
+                aria-live="polite"
+              >
+                {contentLength < 10 && contentLength > 0 && (
+                  <span className="inline-flex items-center gap-0.5">
+                    <IconWarning size={10} color="#c46a4a" />
+                    至少 10 字
+                  </span>
+                )}
+                已写 {contentLength} 字
+                {contentLength >= 10 && contentLength < 20 && "（可以提交了）"}
+              </p>
+            </div>
           </div>
 
-          {/* Spacer for character count absolute positioning */}
-          <div className="h-5" />
+
 
           {/* 4. Wish List */}
           <div className="mb-6">

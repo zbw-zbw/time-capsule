@@ -281,7 +281,7 @@ function CapsuleDetail() {
 
         {/* Original Letter */}
         {opened && !opening && (
-        <div className="mb-4">
+        <div className="mb-4" style={{ animation: "unfold-letter 0.6s cubic-bezier(0.22, 1, 0.36, 1) forwards" }}>
           <div
             className="relative bg-paper rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
             style={{
@@ -326,7 +326,7 @@ function CapsuleDetail() {
 
         {/* AI Reply */}
         {opened && !opening && showReply && (
-          <div className="mb-8">
+          <div className="mb-8" style={{ animation: "unfold-letter 0.6s cubic-bezier(0.22, 1, 0.36, 1) 0.2s both" }}>
             <div
               className="relative bg-paper-alt rounded-2xl p-4 md:p-10 letter-lines card-border-transition"
               style={{

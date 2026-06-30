@@ -157,7 +157,15 @@ function CapsuleCard({
                 <IconCalendar size={14} className="mr-1" />
                 {letter.recipientTime}期胶囊
               </span>
-              <span className="text-sm">{letter.mood}</span>
+              <span
+                className="inline-block px-2.5 py-0.5 rounded-full text-xs font-sans"
+                style={{
+                  backgroundColor: "rgba(168,152,136,0.15)",
+                  color: "#a89888",
+                }}
+              >
+                {letter.mood}
+              </span>
             </div>
 
             {/* Summary */}
