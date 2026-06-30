@@ -273,8 +273,11 @@ body::before {
   }
 }
 
-/* Smooth scrolling globally */
+/* Only smooth scroll for anchor links, not page transitions */
 html {
+  scroll-behavior: auto;
+}
+html:has(a[href^="#"]:focus) {
   scroll-behavior: smooth;
 }
 
