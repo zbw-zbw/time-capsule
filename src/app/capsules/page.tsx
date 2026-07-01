@@ -219,6 +219,7 @@ export default function CapsulesPage() {
   const [letters, setLetters] = useState<TimeCapsuleLetter[]>([]);
   const [mounted, setMounted] = useState(false);
   const [filter, setFilter] = useState<FilterTab>("all");
+  const [sortBy, setSortBy] = useState<"newest" | "soonest" | "oldest">("newest");
 
   useEffect(() => {
     setMounted(true);
@@ -282,11 +283,22 @@ export default function CapsulesPage() {
   const unopened = letters.filter((l) => l.status !== "opened").length;
   const openedCount = total - unopened;
 
-  const filteredLetters = letters.filter((l) => {
-    if (filter === "waiting") return l.status !== "opened";
-    if (filter === "opened") return l.status === "opened";
-    return true;
-  });
+  const filteredLetters = letters
+    .filter((l) => {
+      if (filter === "waiting") return l.status !== "opened";
+      if (filter === "opened") return l.status === "opened";
+      return true;
+    })
+    .sort((a, b) => {
+      if (sortBy === "newest") {
+        return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
+      }
+      if (sortBy === "oldest") {
+        return new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime();
+      }
+      // soonest: by openAt ascending (soonest to open first)
+      return new Date(a.openAt).getTime() - new Date(b.openAt).getTime();
+    });
 
   // Empty state
   if (total === 0) {
@@ -374,6 +386,31 @@ export default function CapsulesPage() {
                 </button>
               );
             })}
+          </div>
+
+          {/* Sort options */}
+          <div className="flex items-center justify-center gap-2 mb-4">
+            <span className="font-sans text-warm-muted/40 text-[10px]">排序：</span>
+            {([
+              { key: "newest", label: "最新" },
+              { key: "soonest", label: "即将开启" },
+              { key: "oldest", label: "最早" },
+            ] as const).map((opt) => (
+              <button
+                key={opt.key}
+                type="button"
+                onClick={() => setSortBy(opt.key)}
+                className={`px-3 py-1 rounded-full text-[11px] font-sans transition-all`}
+                style={{
+                  backgroundColor: sortBy === opt.key ? "rgba(212,165,116,0.15)" : "transparent",
+                  color: sortBy === opt.key ? "#d4a574" : "#a89888",
+                  border: sortBy === opt.key ? "1px solid rgba(212,165,116,0.2)" : "1px solid transparent",
+                  cursor: "pointer",
+                }}
+              >
+                {opt.label}
+              </button>
+            ))}
           </div>
         </div>
 

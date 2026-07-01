@@ -184,6 +184,7 @@ export default function WritePage() {
   const [focusedWishIndex, setFocusedWishIndex] = useState<number | null>(null);
   const [moodAnimKey, setMoodAnimKey] = useState<string | null>(null);
   const [demoMode, setDemoModeLocal] = useState(false);
+  const [draftSavedAt, setDraftSavedAt] = useState<Date | null>(null);
   const [activeTemplateId, setActiveTemplateId] = useState<string | null>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const draftRef = useRef<DraftData>({ recipient: "1年后", content: "", wishes: ["", "", ""], mood: "" });
@@ -206,6 +207,7 @@ export default function WritePage() {
       const draft: DraftData = { recipient, content, wishes, mood };
       if (hasContent(draft)) {
         saveDraft(draft);
+        setDraftSavedAt(new Date());
       }
     }, 5000);
     return () => clearInterval(interval);
@@ -348,6 +350,16 @@ export default function WritePage() {
         </div>
       </div>
 
+      {/* Draft save indicator */}
+      {draftSavedAt && (
+        <div className="max-w-[720px] mx-auto mb-2 flex items-center justify-end gap-1.5">
+          <div className="w-1.5 h-1.5 rounded-full bg-amber/40" />
+          <span className="font-sans text-[10px] text-warm-muted/40">
+            草稿已保存 · {draftSavedAt.toLocaleTimeString("zh-CN", { hour: "2-digit", minute: "2-digit" })}
+          </span>
+        </div>
+      )}
+
       {/* Letter Paper Card */}
       <div className="max-w-[720px] mx-auto relative">
         {/* Left binding line (desktop only) - gradient top to bottom */}
@@ -489,6 +501,7 @@ export default function WritePage() {
               onBlur={() => {
                 setContentFocus(false);
                 saveDraft({ recipient, content, wishes, mood });
+                setDraftSavedAt(new Date());
               }}
               placeholder="此刻的你，想对未来的自己说些什么？可以聊聊近况、烦恼、期待..."
               className="w-full font-handwrite text-[#2a2420] text-base md:text-[1.15rem] resize-none bg-transparent outline-none"
@@ -560,6 +573,7 @@ export default function WritePage() {
                     onBlur={() => {
                       setFocusedWishIndex(null);
                       saveDraft({ recipient, content, wishes, mood });
+                      setDraftSavedAt(new Date());
                     }}
                     placeholder="写下一个愿望或目标..."
                     className="flex-1 font-handwrite text-[#2a2420] text-base bg-transparent outline-none"

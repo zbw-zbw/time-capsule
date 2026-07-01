@@ -2,6 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useCapsuleCount } from "@/lib/storage";
 import { IconMenu, IconClose, IconMailbox, IconEnvelope, IconPen } from "@/components/Icons";
 
@@ -14,6 +15,7 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
   const { unopened: badgeCount } = useCapsuleCount();
+  const pathname = usePathname();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -51,9 +53,21 @@ export function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              className="px-4 py-2 rounded-full text-sm font-sans text-warm-muted hover:text-amber hover:bg-amber/10 transition-all duration-200"
+              className={`px-4 py-2 rounded-full text-sm font-sans transition-all duration-200 inline-flex items-center gap-1.5 ${
+                pathname === link.href
+                  ? "text-amber bg-amber/10"
+                  : "text-warm-muted hover:text-amber hover:bg-amber/10"
+              }`}
             >
               {link.label}
+              {link.href === "/capsules" && badgeCount > 0 && (
+                <span
+                  className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-semibold"
+                  style={{ backgroundColor: "rgba(212,165,116,0.2)", color: "#d4a574" }}
+                >
+                  {badgeCount}
+                </span>
+              )}
             </Link>
           ))}
 
@@ -108,9 +122,21 @@ export function Navbar() {
                   key={link.href}
                   href={link.href}
                   onClick={() => setMenuOpen(false)}
-                  className="block px-4 py-3 rounded-lg text-warm-muted hover:text-amber hover:bg-amber/10 transition-all font-sans text-sm"
+                  className={`block px-4 py-3 rounded-lg transition-all font-sans text-sm inline-flex items-center gap-2 ${
+                    pathname === link.href
+                      ? "text-amber bg-amber/10"
+                      : "text-warm-muted hover:text-amber hover:bg-amber/10"
+                  }`}
                 >
                   {link.label}
+                  {link.href === "/capsules" && badgeCount > 0 && (
+                    <span
+                      className="inline-flex items-center justify-center min-w-[18px] h-[18px] px-1 rounded-full text-[10px] font-semibold"
+                      style={{ backgroundColor: "rgba(212,165,116,0.2)", color: "#d4a574" }}
+                    >
+                      {badgeCount}
+                    </span>
+                  )}
                 </Link>
               ))}
 

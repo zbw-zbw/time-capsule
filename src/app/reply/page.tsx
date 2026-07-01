@@ -579,6 +579,23 @@ function ReplyContent() {
 
             {/* Secondary buttons */}
             <div className="flex flex-col sm:flex-row items-center gap-3 w-full max-w-[320px]">
+              {isDone && !error && (
+                <button
+                  type="button"
+                  onClick={() => {
+                    setReplyText("");
+                    setIsDone(false);
+                    setIsGenerating(true);
+                    setError(null);
+                    // Re-trigger the streaming by reloading
+                    window.location.reload();
+                  }}
+                  className="w-full sm:w-auto px-6 py-2.5 border border-amber/30 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift inline-flex items-center justify-center gap-1.5"
+                  style={{ cursor: "pointer" }}
+                >
+                  重新生成回信
+                </button>
+              )}
               <Link
                 href="/write"
                 className="w-full sm:w-auto px-6 py-2.5 border border-amber/40 text-amber font-sans text-sm rounded-full hover:bg-amber/10 transition-all text-center btn-lift inline-flex items-center justify-center gap-1.5"
